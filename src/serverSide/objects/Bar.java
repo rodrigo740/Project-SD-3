@@ -4,9 +4,9 @@ import clientSide.entities.Student;
 import clientSide.entities.StudentStates;
 import clientSide.entities.Waiter;
 import clientSide.entities.WaiterStates;
-import clientSide.stubs.GeneralReposStub;
 import genclass.GenericIO;
-import serverSide.entities.BarClientProxy;
+import interfaces.BarInterface;
+import interfaces.GeneralReposInterface;
 import serverSide.main.ServerBar;
 import serverSide.main.SimulPar;
 
@@ -20,12 +20,12 @@ import serverSide.main.SimulPar;
  * waiter, where he waits for something to happen and waits for the student to
  * signal that he can bring the next course.
  */
-public class Bar {
+public class Bar implements BarInterface {
 
 	/**
 	 * Reference to the General Information Repository.
 	 */
-	private final GeneralReposStub reposStub;
+	private final GeneralReposInterface reposStub;
 	/**
 	 * Number of entity groups requesting the shutdown.
 	 */
@@ -36,12 +36,12 @@ public class Bar {
 	 * Reference to student threads.
 	 */
 
-	private final BarClientProxy[] student;
+	private final Thread[] student;
 	/**
 	 * Reference to waiter threads.
 	 */
 
-	private final BarClientProxy[] waiter;
+	private final Thread[] waiter;
 	/**
 	 * Char that represents the next operation of the waiter
 	 */
@@ -116,10 +116,10 @@ public class Bar {
 	 * 
 	 * @param reposStub reference to the General Information Repository
 	 */
-	public Bar(GeneralReposStub reposStub) {
+	public Bar(GeneralReposInterface reposStub) {
 		this.reposStub = reposStub;
-		student = new BarClientProxy[SimulPar.S];
-		waiter = new BarClientProxy[SimulPar.W];
+		student = new Thread[SimulPar.S];
+		waiter = new Thread[SimulPar.W];
 		for (int i = 0; i < SimulPar.S; i++)
 			student[i] = null;
 		for (int i = 0; i < SimulPar.W; i++)
@@ -188,22 +188,22 @@ public class Bar {
 
 		// Sleep while waiting for something to happen
 		while (!actionNeeded) {
-			waiter[((BarClientProxy) Thread.currentThread()).getWaiterID()] = (BarClientProxy) Thread.currentThread();
+			waiter[((Waiter) Thread.currentThread()).getWaiterID()] = (Waiter) Thread.currentThread();
 			try {
 				wait();
 			} catch (InterruptedException e) {
-				waiter[((BarClientProxy) Thread.currentThread()).getWaiterID()] = null;
+				waiter[((Waiter) Thread.currentThread()).getWaiterID()] = null;
 				return 'e';
 			}
 		}
 		if (oper == 'p') {
 			// Sleep while waiting for the student to signal it needs the next course
 			while (!bringNextCourse) {
-				waiter[((BarClientProxy) Thread.currentThread()).getWaiterID()] = (BarClientProxy) Thread.currentThread();
+				waiter[((Waiter) Thread.currentThread()).getWaiterID()] = (Waiter) Thread.currentThread();
 				try {
 					wait();
 				} catch (InterruptedException e) {
-					waiter[((BarClientProxy) Thread.currentThread()).getWaiterID()] = null;
+					waiter[((Waiter) Thread.currentThread()).getWaiterID()] = null;
 					return 'e';
 				}
 			}
@@ -353,8 +353,8 @@ public class Bar {
 	 */
 	public synchronized void returnToTheBar() {
 		// set state of waiter
-		((BarClientProxy) Thread.currentThread()).setWaiterState(WaiterStates.APPST);
-		reposStub.setWaiterState(((BarClientProxy) Thread.currentThread()).getWaiterID(), WaiterStates.APPST);
+		((Waiter) Thread.currentThread()).setWaiterState(WaiterStates.APPST);
+		reposStub.setWaiterState(((Waiter) Thread.currentThread()).getWaiterID(), WaiterStates.APPST);
 	}
 
 	/**
@@ -366,8 +366,8 @@ public class Bar {
 	public synchronized void returnToTheBarAfterSalute() {
 		nSaluted++;
 		// set state of waiter
-		((BarClientProxy) Thread.currentThread()).setWaiterState(WaiterStates.APPST);
-		reposStub.setWaiterState(((BarClientProxy) Thread.currentThread()).getWaiterID(), WaiterStates.APPST);
+		((Waiter) Thread.currentThread()).setWaiterState(WaiterStates.APPST);
+		reposStub.setWaiterState(((Waiter) Thread.currentThread()).getWaiterID(), WaiterStates.APPST);
 	}
 
 	/**
@@ -380,8 +380,8 @@ public class Bar {
 		// reset student called flag
 		studentCalled = false;
 		// set state of waiter
-		((BarClientProxy) Thread.currentThread()).setWaiterState(WaiterStates.APPST);
-		reposStub.setWaiterState(((BarClientProxy) Thread.currentThread()).getWaiterID(), WaiterStates.APPST);
+		((Waiter) Thread.currentThread()).setWaiterState(WaiterStates.APPST);
+		reposStub.setWaiterState(((Waiter) Thread.currentThread()).getWaiterID(), WaiterStates.APPST);
 	}
 
 	/**
@@ -395,8 +395,8 @@ public class Bar {
 	public synchronized void returnToTheBarAfterPortionsDelivered() {
 		waiterAlerted = false;
 		// set state of waiter
-		((BarClientProxy) Thread.currentThread()).setWaiterState(WaiterStates.APPST);
-		reposStub.setWaiterState(((BarClientProxy) Thread.currentThread()).getWaiterID(), WaiterStates.APPST);
+		((Waiter) Thread.currentThread()).setWaiterState(WaiterStates.APPST);
+		reposStub.setWaiterState(((Waiter) Thread.currentThread()).getWaiterID(), WaiterStates.APPST);
 	}
 
 	/**
@@ -407,8 +407,8 @@ public class Bar {
 	 */
 	public synchronized void prepareBill() {
 		// set state of waiter
-		((BarClientProxy) Thread.currentThread()).setWaiterState(WaiterStates.PRCBL);
-		reposStub.setWaiterState(((BarClientProxy) Thread.currentThread()).getWaiterID(), WaiterStates.PRCBL);
+		((Waiter) Thread.currentThread()).setWaiterState(WaiterStates.PRCBL);
+		reposStub.setWaiterState(((Waiter) Thread.currentThread()).getWaiterID(), WaiterStates.PRCBL);
 	}
 
 	/**
@@ -513,8 +513,8 @@ public class Bar {
 	public synchronized void goHome() {
 		int studentID;
 		// set state of student
-		studentID = ((BarClientProxy) Thread.currentThread()).getStudentID();
-		((BarClientProxy) Thread.currentThread()).setStudentState(StudentStates.GGHOM);
+		studentID = ((Student) Thread.currentThread()).getStudentID();
+		((Student) Thread.currentThread()).setStudentState(StudentStates.GGHOM);
 		reposStub.setStudentState(studentID, StudentStates.GGHOM);
 		// increment number of students that have left the restaurant
 		nLeft++;
@@ -565,7 +565,7 @@ public class Bar {
 	public synchronized void shutdown() {
 		nEntities += 1;
 		if (nEntities >= SimulPar.EB)
-			ServerBar.waitConnection = false;
+			ServerBar.shutdown ();
 		notifyAll(); // the waiter may now terminate
 	}
 

@@ -1,12 +1,8 @@
 package clientSide.entities;
 
 import java.rmi.*;
-
-import clientSide.stubs.BarStub;
-import clientSide.stubs.KitchenStub;
-import clientSide.stubs.TableStub;
-import genclass.GenericIO;
 import interfaces.*;
+import genclass.GenericIO;
 
 /**
  * Waiter thread.

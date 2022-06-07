@@ -4,13 +4,13 @@ import clientSide.entities.Chef;
 import clientSide.entities.ChefStates;
 import clientSide.entities.Waiter;
 import clientSide.entities.WaiterStates;
-import clientSide.stubs.GeneralReposStub;
 import genclass.GenericIO;
-import serverSide.entities.KitchenClientProxy;
+import interfaces.GeneralReposInterface;
+import interfaces.KitchenInterface;
 import serverSide.main.ServerKitchen;
 import serverSide.main.SimulPar;
 
-public class Kitchen {
+public class Kitchen implements KitchenInterface{
 
 	/**
 	 * Kitchen.
@@ -27,12 +27,12 @@ public class Kitchen {
 	/**
 	 * Reference to the General Information Repository.
 	 */
-	private final GeneralReposStub reposStub;
+	private final GeneralReposInterface reposStub;
 	/**
 	 * Reference to chef threads.
 	 */
 
-	private final KitchenClientProxy[] chef;
+	private final Thread[] chef;
 	/**
 	 * Boolean flag that indicates if the order has arrived
 	 */
@@ -64,10 +64,10 @@ public class Kitchen {
 	 * 
 	 * @param reposStub reference to the General Information Repository
 	 */
-	public Kitchen(GeneralReposStub reposStub) {
+	public Kitchen(GeneralReposInterface reposStub) {
 		this.reposStub = reposStub;
 		nEntities = 0;
-		chef = new KitchenClientProxy[SimulPar.C];
+		chef = new Thread[SimulPar.C];
 		for (int i = 0; i < SimulPar.C; i++)
 			chef[i] = null;
 
@@ -112,8 +112,8 @@ public class Kitchen {
 
 	public synchronized void handTheNoteToTheChef() {
 		// set state of waiter
-		((KitchenClientProxy) Thread.currentThread()).setWaiterState(WaiterStates.PCODR);
-		reposStub.setWaiterState(((KitchenClientProxy) Thread.currentThread()).getWaiterID(), WaiterStates.PCODR);
+		((Waiter) Thread.currentThread()).setWaiterState(WaiterStates.PCODR);
+		reposStub.setWaiterState(((Waiter) Thread.currentThread()).getWaiterID(), WaiterStates.PCODR);
 		// set orderArrived flag and wake chef
 		setOrderArrived(true);
 		notifyAll();
@@ -129,8 +129,8 @@ public class Kitchen {
 
 	public synchronized void watchTheNews() {
 		// set state of chef
-		((KitchenClientProxy) Thread.currentThread()).setChefState(ChefStates.WAFOR);
-		reposStub.setChefState(((KitchenClientProxy) Thread.currentThread()).getChefID(), ChefStates.WAFOR);
+		((Chef) Thread.currentThread()).setChefState(ChefStates.WAFOR);
+		reposStub.setChefState(((Chef) Thread.currentThread()).getChefID(), ChefStates.WAFOR);
 		// Sleep while waiting for order to arrive
 		while (!orderArrived) {
 			try {
@@ -151,8 +151,8 @@ public class Kitchen {
 
 	public synchronized void startPreparations() {
 		// set state of chef
-		((KitchenClientProxy) Thread.currentThread()).setChefState(ChefStates.PRPCS);
-		reposStub.setChefState(((KitchenClientProxy) Thread.currentThread()).getChefID(), ChefStates.PRPCS);
+		((Chef) Thread.currentThread()).setChefState(ChefStates.PRPCS);
+		reposStub.setChefState(((Chef) Thread.currentThread()).getChefID(), ChefStates.PRPCS);
 	}
 
 	/**
@@ -164,8 +164,8 @@ public class Kitchen {
 
 	public synchronized void continuePreparation() {
 		// set state of chef
-		((KitchenClientProxy) Thread.currentThread()).setChefState(ChefStates.PRPCS);
-		reposStub.setChefState(((KitchenClientProxy) Thread.currentThread()).getChefID(), ChefStates.PRPCS);
+		((Chef) Thread.currentThread()).setChefState(ChefStates.PRPCS);
+		reposStub.setChefState(((Chef) Thread.currentThread()).getChefID(), ChefStates.PRPCS);
 		// reset delivered portions
 		deliveredPortions = 0;
 	}
@@ -179,8 +179,8 @@ public class Kitchen {
 
 	public synchronized void proceedToPresentation() {
 		// set state of chef
-		((KitchenClientProxy) Thread.currentThread()).setChefState(ChefStates.DSHPT);
-		reposStub.setChefState(((KitchenClientProxy) Thread.currentThread()).getChefID(), ChefStates.DSHPT);
+		((Chef) Thread.currentThread()).setChefState(ChefStates.DSHPT);
+		reposStub.setChefState(((Chef) Thread.currentThread()).getChefID(), ChefStates.DSHPT);
 		// set portionReady flag
 		setPortionReady(true);
 	}
@@ -207,8 +207,8 @@ public class Kitchen {
 
 	public synchronized void deliverPortion() {
 		// set state of chef
-		((KitchenClientProxy) Thread.currentThread()).setChefState(ChefStates.DLVPT);
-		reposStub.setChefState(((KitchenClientProxy) Thread.currentThread()).getChefID(), ChefStates.DLVPT);
+		((Chef) Thread.currentThread()).setChefState(ChefStates.DLVPT);
+		reposStub.setChefState(((Chef) Thread.currentThread()).getChefID(), ChefStates.DLVPT);
 		// set portionReady flag
 		//setPortionReady(true);
 		//notifyAll();
@@ -234,8 +234,8 @@ public class Kitchen {
 
 	public synchronized void collectPortion() {
 		// set state of waiter
-		((KitchenClientProxy) Thread.currentThread()).setWaiterState(WaiterStates.WTFPT);
-		reposStub.setWaiterState(((KitchenClientProxy) Thread.currentThread()).getWaiterID(), WaiterStates.WTFPT);
+		((Waiter) Thread.currentThread()).setWaiterState(WaiterStates.WTFPT);
+		reposStub.setWaiterState(((Waiter) Thread.currentThread()).getWaiterID(), WaiterStates.WTFPT);
 		// Sleep while waiting for a portion to be ready
 		while (!portionReady) {
 			try {
@@ -259,8 +259,8 @@ public class Kitchen {
 
 	public synchronized void haveNextPortionReady() {
 		// set state of chef
-		((KitchenClientProxy) Thread.currentThread()).setChefState(ChefStates.DSHPT);
-		reposStub.setChefState(((KitchenClientProxy) Thread.currentThread()).getChefID(), ChefStates.DSHPT);
+		((Chef) Thread.currentThread()).setChefState(ChefStates.DSHPT);
+		reposStub.setChefState(((Chef) Thread.currentThread()).getChefID(), ChefStates.DSHPT);
 	}
 
 	/**
@@ -288,8 +288,8 @@ public class Kitchen {
 
 	public synchronized void cleanUp() {
 		// set state of chef
-		((KitchenClientProxy) Thread.currentThread()).setChefState(ChefStates.CLSSV);
-		reposStub.setChefState(((KitchenClientProxy) Thread.currentThread()).getChefID(), ChefStates.CLSSV);
+		((Chef) Thread.currentThread()).setChefState(ChefStates.CLSSV);
+		reposStub.setChefState(((Chef) Thread.currentThread()).getChefID(), ChefStates.CLSSV);
 	}
 
 	/**
@@ -333,7 +333,7 @@ public class Kitchen {
 	public synchronized void shutdown() {
 		nEntities += 1;
 		if (nEntities >= SimulPar.EK)
-			ServerKitchen.waitConnection = false;
+			ServerKitchen.shutdown();
 		notifyAll(); // the chef may now terminate
 	}
 

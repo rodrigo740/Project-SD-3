@@ -7,6 +7,8 @@ import clientSide.entities.StudentStates;
 import clientSide.entities.WaiterStates;
 import genclass.GenericIO;
 import genclass.TextFile;
+import interfaces.GeneralReposInterface;
+import serverSide.main.ServerBar;
 import serverSide.main.ServerGeneralRepos;
 import serverSide.main.SimulPar;
 
@@ -19,7 +21,7 @@ import serverSide.main.SimulPar;
  * There are no internal synchronization points.
  */
 
-public class GeneralRepos {
+public class GeneralRepos implements GeneralReposInterface {
 
 	/**
 	 * Name of the logging file.
@@ -91,7 +93,7 @@ public class GeneralRepos {
 	 *
 	 * @param logFileName name of the logging file
 	 */
-
+	
 	public synchronized void initSimul(String logFileName) {
 		if (!Objects.equals(logFileName, ""))
 			this.logFileName = logFileName;
@@ -106,7 +108,7 @@ public class GeneralRepos {
 	public synchronized void shutdown() {
 		nEntities += 1;
 		if (nEntities >= SimulPar.EG)
-			ServerGeneralRepos.waitConnection = false;
+			ServerGeneralRepos.shutdown ();
 	}
 
 	/**

@@ -4,11 +4,11 @@ import clientSide.entities.Student;
 import clientSide.entities.StudentStates;
 import clientSide.entities.Waiter;
 import clientSide.entities.WaiterStates;
-import clientSide.stubs.GeneralReposStub;
 import commInfra.MemException;
 import commInfra.MemFIFO;
 import genclass.GenericIO;
-import serverSide.entities.TableClientProxy;
+import interfaces.GeneralReposInterface;
+import interfaces.TableInterface;
 import serverSide.main.ServerBar;
 import serverSide.main.ServerTable;
 import serverSide.main.SimulPar;
@@ -31,7 +31,7 @@ import serverSide.main.SimulPar;
  * to him
  */
 
-public class Table {
+public class Table implements TableInterface{
 	/**
 	 * Number of entity groups requesting the shutdown.
 	 */
@@ -42,7 +42,7 @@ public class Table {
 	 * Reference to TableClientProxy threads.
 	 */
 
-	private final TableClientProxy[] student;
+	private final Thread[] student;
 	/**
 	 * id of the last student to eat in a course
 	 */
@@ -166,7 +166,7 @@ public class Table {
 	 * Reference to the General Repository.
 	 */
 
-	private final GeneralReposStub reposStub;
+	private final GeneralReposInterface reposStub;
 	
 	/**
 	 * number of students that have left chatting.
@@ -179,13 +179,13 @@ public class Table {
 	 *
 	 * @param reposStub reference to the general repository
 	 */
-	public Table(GeneralReposStub reposStub) {
+	public Table(GeneralReposInterface reposStub) {
 		// first starts at -1 and only the first student to enter will change it to its
 		// ID
 		chatLeft = 0;
 		first = -1;
 		lastToEatID = -1;
-		student = new TableClientProxy[SimulPar.S];
+		student = new Thread[SimulPar.S];
 		for (int i = 0; i < SimulPar.S; i++)
 			student[i] = null;
 		try {
@@ -205,8 +205,8 @@ public class Table {
 	 */
 	public synchronized void saluteTheClient() {
 		// set state of waiter
-		((TableClientProxy) Thread.currentThread()).setWaiterState(WaiterStates.PRSMN);
-		reposStub.setWaiterState(((TableClientProxy) Thread.currentThread()).getWaiterID(), WaiterStates.PRSMN);
+		((Waiter) Thread.currentThread()).setWaiterState(WaiterStates.PRSMN);
+		reposStub.setWaiterState(((Waiter) Thread.currentThread()).getWaiterID(), WaiterStates.PRSMN);
 		// setting clientSaluted flag and waking up the student
 		setClientSaluted(true);
 		notifyAll();
@@ -250,8 +250,8 @@ public class Table {
 	 */
 	public synchronized void presentBill() {
 		// set state of waiter
-		((TableClientProxy) Thread.currentThread()).setWaiterState(WaiterStates.RECPM);
-		reposStub.setWaiterState(((TableClientProxy) Thread.currentThread()).getWaiterID(), WaiterStates.RECPM);
+		((Waiter) Thread.currentThread()).setWaiterState(WaiterStates.RECPM);
+		reposStub.setWaiterState(((Waiter) Thread.currentThread()).getWaiterID(), WaiterStates.RECPM);
 		billPresented = true;
 		notifyAll();
 		// Sleep while waiting for the student to honor the bill
@@ -287,8 +287,8 @@ public class Table {
 
 	public synchronized void getThePad() {
 		// set state of waiter
-		((TableClientProxy) Thread.currentThread()).setWaiterState(WaiterStates.TKODR);
-		reposStub.setWaiterState(((TableClientProxy) Thread.currentThread()).getWaiterID(), WaiterStates.TKODR);
+		((Waiter) Thread.currentThread()).setWaiterState(WaiterStates.TKODR);
+		reposStub.setWaiterState(((Waiter) Thread.currentThread()).getWaiterID(), WaiterStates.TKODR);
 		// setting gotThePad flag and wake up the student
 		setGotThePad(true);
 		notifyAll();
@@ -391,9 +391,9 @@ public class Table {
 	public synchronized void takeASeat() {
 		int studentID;
 		// set state of student
-		studentID = ((TableClientProxy) Thread.currentThread()).getStudentID();
-		student[studentID] = ((TableClientProxy) Thread.currentThread());
-		((TableClientProxy) Thread.currentThread()).setStudentState(StudentStates.TKSTT);
+		studentID = ((Student) Thread.currentThread()).getStudentID();
+		student[studentID] = ((Student) Thread.currentThread());
+		((Student) Thread.currentThread()).setStudentState(StudentStates.TKSTT);
 		reposStub.setStudentState(studentID, StudentStates.TKSTT);
 		// adding student to the sit order FIFO
 		try {
@@ -406,7 +406,7 @@ public class Table {
 			first = studentID;
 		}
 		// setting the table seat of the student
-		((TableClientProxy) Thread.currentThread()).setSeat(nStudents);
+		((Student) Thread.currentThread()).setSeat(nStudents);
 		reposStub.setStudentSeat(studentID, nStudents);
 		nStudents++;
 		// Sleep while waiting for the waiter to salute the student
@@ -429,8 +429,8 @@ public class Table {
 	public synchronized void selectingCourse() {
 		int studentID;
 		// set state of student
-		studentID = ((TableClientProxy) Thread.currentThread()).getStudentID();
-		((TableClientProxy) Thread.currentThread()).setStudentState(StudentStates.SELCS);
+		studentID = ((Student) Thread.currentThread()).getStudentID();
+		((Student) Thread.currentThread()).setStudentState(StudentStates.SELCS);
 		reposStub.setStudentState(studentID, StudentStates.SELCS);
 		// set menuRead flag and waking up the waiter
 		menuRead = true;
@@ -447,7 +447,7 @@ public class Table {
      *         false, otherwise
 	 */
 	public synchronized boolean firstToEnter() {
-		int studentID = ((TableClientProxy) Thread.currentThread()).getStudentID();
+		int studentID = ((Student) Thread.currentThread()).getStudentID();
 		return studentID == first;
 	}
 
@@ -474,8 +474,8 @@ public class Table {
 	public synchronized void organizeOrder() {
 		int studentID;
 		// set state of student
-		studentID = ((TableClientProxy) Thread.currentThread()).getStudentID();
-		((TableClientProxy) Thread.currentThread()).setStudentState(StudentStates.OGODR);
+		studentID = ((Student) Thread.currentThread()).getStudentID();
+		((Student) Thread.currentThread()).setStudentState(StudentStates.OGODR);
 		reposStub.setStudentState(studentID, StudentStates.OGODR);
 		// for each student wait minus himself
 		while (nOrders < SimulPar.S - 1) {
@@ -533,8 +533,8 @@ public class Table {
 	public synchronized void chat() {
 		int studentID;
 		// set state of student
-		studentID = ((TableClientProxy) Thread.currentThread()).getStudentID();
-		((TableClientProxy) Thread.currentThread()).setStudentState(StudentStates.CHTWC);
+		studentID = ((Student) Thread.currentThread()).getStudentID();
+		((Student) Thread.currentThread()).setStudentState(StudentStates.CHTWC);
 		reposStub.setStudentState(studentID, StudentStates.CHTWC);
 		nChatting++;
 		
@@ -579,8 +579,8 @@ public class Table {
 		notifyAll();
 		int studentID;
 		// set state of student
-		studentID = ((TableClientProxy) Thread.currentThread()).getStudentID();
-		((TableClientProxy) Thread.currentThread()).setStudentState(StudentStates.EJYML);
+		studentID = ((Student) Thread.currentThread()).getStudentID();
+		((Student) Thread.currentThread()).setStudentState(StudentStates.EJYML);
 		reposStub.setStudentState(studentID, StudentStates.EJYML);
 		try {
 			Thread.sleep((long) (1 + 40 * Math.random()));
@@ -600,7 +600,7 @@ public class Table {
 	public synchronized boolean lastToEat() {
 		int studentID;
 		// set state of student
-		studentID = ((TableClientProxy) Thread.currentThread()).getStudentID();
+		studentID = ((Student) Thread.currentThread()).getStudentID();
 		// increase number of portions eaten
 		eat++;
 		if (eat == SimulPar.S) {
@@ -635,7 +635,7 @@ public class Table {
 
 	public synchronized boolean lastToEnterRestaurant() {
 		// set state of student
-		int studentID = ((TableClientProxy) Thread.currentThread()).getStudentID();
+		int studentID = ((Student) Thread.currentThread()).getStudentID();
 		return studentID == seatOrder.getLast();
 	}
 
@@ -649,8 +649,8 @@ public class Table {
 	public synchronized void honorTheBill() {
 		int studentID;
 		// set state of student
-		studentID = ((TableClientProxy) Thread.currentThread()).getStudentID();
-		((TableClientProxy) Thread.currentThread()).setStudentState(StudentStates.PYTBL);
+		studentID = ((Student) Thread.currentThread()).getStudentID();
+		((Student) Thread.currentThread()).setStudentState(StudentStates.PYTBL);
 		reposStub.setStudentState(studentID, StudentStates.PYTBL);
 		// sleep while waiting for the waiter to present the bill
 		while (!billPresented) {
@@ -675,8 +675,8 @@ public class Table {
 	public synchronized void goHome() {
 		int studentID;
 		// set state of student
-		studentID = ((TableClientProxy) Thread.currentThread()).getStudentID();
-		((TableClientProxy) Thread.currentThread()).setStudentState(StudentStates.GGHOM);
+		studentID = ((Student) Thread.currentThread()).getStudentID();
+		((Student) Thread.currentThread()).setStudentState(StudentStates.GGHOM);
 		reposStub.setStudentState(studentID, StudentStates.GGHOM);
 	}
 
@@ -690,8 +690,8 @@ public class Table {
 	public synchronized void waitForEveryoneToFinish() {
 		int studentID;
 		// set state of student
-		studentID = ((TableClientProxy) Thread.currentThread()).getStudentID();
-		((TableClientProxy) Thread.currentThread()).setStudentState(StudentStates.CHTWC);
+		studentID = ((Student) Thread.currentThread()).getStudentID();
+		((Student) Thread.currentThread()).setStudentState(StudentStates.CHTWC);
 		reposStub.setStudentState(studentID, StudentStates.CHTWC);
 		while (!allFinishedEating) {
 			try {
@@ -728,7 +728,7 @@ public class Table {
 	public synchronized void shutdown() {
 		nEntities += 1;
 		if (nEntities >= SimulPar.ET)
-			ServerTable.waitConnection = false;
+			ServerTable.shutdown();
 		notifyAll(); // the student may now terminate
 	}
 }
