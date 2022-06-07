@@ -1,7 +1,7 @@
 package clientSide.entities;
 
-import clientSide.stubs.BarStub;
-import clientSide.stubs.KitchenStub;
+import java.rmi.*;
+import interfaces.*;
 import genclass.GenericIO;
 
 /**
@@ -23,11 +23,11 @@ public class Chef extends Thread {
 	/**
 	 * Reference to the Bar
 	 */
-	private final BarStub barStub;
+	private final BarInterface barStub;
 	/**
 	 * Reference to the Kitchen
 	 */
-	private final KitchenStub kitStub;
+	private final KitchenInterface kitStub;
 
 	/**
 	 * Instantiation of a Chef Thread
@@ -38,7 +38,7 @@ public class Chef extends Thread {
 	 * @param barStub       reference of the BarStub
 	 * @param kitStub       reference of the KitchenStub
 	 */
-	public Chef(String name, int chefID, int chefState, BarStub barStub, KitchenStub kitStub) {
+	public Chef(String name, int chefID, int chefState, BarInterface barStub, KitchenInterface kitStub) {
 		super(name);
 		this.chefID = chefID;
 		this.chefState = ChefStates.WAFOR;
@@ -90,19 +90,19 @@ public class Chef extends Thread {
 	public void run() {
 		boolean firstCourse = true;
 		// Transition to 'WAFOR'
-		kitStub.watchTheNews();
+		watchTheNews();
 		// Transition to 'PRPCS'
-		kitStub.startPreparations();
+		startPreparations();
 		do {
 			if (!firstCourse) {
 				// Transition to 'PRPCS'
-				kitStub.continuePreparation();
+				continuePreparation();
 			} else {
 				firstCourse = false;
 			}
 			// Transition to 'DSHPT'
-			kitStub.proceedToPresentation();
-			barStub.alertWaiter();
+			proceedToPresentation();
+			BARalertWaiter();
 			/*
 			long v = (long) (1 + 40 * Math.random());
 			try {
@@ -110,11 +110,11 @@ public class Chef extends Thread {
 			} catch (InterruptedException e) {
 			}*/
 			// Transition to 'DLVPT'
-			kitStub.deliverPortion();
-			while (!kitStub.allPortionsDelived()) {
+			deliverPortion();
+			while (!allPortionsDelived()) {
 				// Transition to 'DSHPT'
-				kitStub.haveNextPortionReady();
-				kitStub.alertWaiter();
+				haveNextPortionReady();
+				alertWaiter();
 				/*
 				v = (long) (1 + 40 * Math.random());
 				try {
@@ -123,11 +123,130 @@ public class Chef extends Thread {
 				}
 				*/
 				// Transition to 'DLVPT'
-				kitStub.deliverPortion();
+				deliverPortion();
 			}
-		} while (!kitStub.orderBeenCompleted());
+		} while (!orderBeenCompleted());
 		// Transition to 'CLSSV'
-		kitStub.cleanUp();
+		cleanUp();
 	}
 
+	private void watchTheNews() { //kitStub
+		 try
+	      { 
+			 kitStub.watchTheNews();
+	      }
+	      catch (RemoteException e)
+	      { GenericIO.writelnString ("Chef " + chefID + " remote exception on watchTheNews: " + e.getMessage ());
+	        System.exit (1);
+	      }
+	}
+	
+	private void startPreparations() { //kitStub
+		try
+	      { 
+			 kitStub.startPreparations();
+	      }
+	      catch (RemoteException e)
+	      { GenericIO.writelnString ("Chef " + chefID + " remote exception on startPreparations: " + e.getMessage ());
+	        System.exit (1);
+	      }
+	}
+	private void continuePreparation() { //kitStub
+		try
+	      { 
+			 kitStub.continuePreparation();
+	      }
+	      catch (RemoteException e)
+	      { GenericIO.writelnString ("Chef " + chefID + " remote exception on continuePreparation: " + e.getMessage ());
+	        System.exit (1);
+	      }
+	}
+	
+	private void proceedToPresentation() { //kitStub
+		try
+	      { 
+			 kitStub.proceedToPresentation();
+	      }
+	      catch (RemoteException e)
+	      { GenericIO.writelnString ("Chef " + chefID + " remote exception on proceedToPresentation: " + e.getMessage ());
+	        System.exit (1);
+	      }
+	}
+	private void deliverPortion() { //kitStub
+		try
+	      { 
+			 kitStub.deliverPortion();
+	      }
+	      catch (RemoteException e)
+	      { GenericIO.writelnString ("Chef " + chefID + " remote exception on deliverPortion: " + e.getMessage ());
+	        System.exit (1);
+	      }
+	}
+	
+	private void haveNextPortionReady() { //kitStub
+		try
+	      { 
+			 kitStub.haveNextPortionReady();
+	      }
+	      catch (RemoteException e)
+	      { GenericIO.writelnString ("Chef " + chefID + " remote exception on haveNextPortionReady: " + e.getMessage ());
+	        System.exit (1);
+	      }
+	}
+	private void alertWaiter() { //kitStub
+		try
+	      { 
+			 kitStub.alertWaiter();
+	      }
+	      catch (RemoteException e)
+	      { GenericIO.writelnString ("Chef " + chefID + " remote exception on alertWaiter to the kitchen: " + e.getMessage ());
+	        System.exit (1);
+	      }
+	}
+	
+	private void cleanUp() { //kitStub
+		try
+	      { 
+			 kitStub.cleanUp();
+	      }
+	      catch (RemoteException e)
+	      { GenericIO.writelnString ("Chef " + chefID + " remote exception on cleanUp: " + e.getMessage ());
+	        System.exit (1);
+	      }
+	}
+	private boolean orderBeenCompleted() { //kitStub
+		 boolean ret = false;   // return value
+
+	      try
+	      { ret = kitStub.orderBeenCompleted();
+	      }
+	      catch (RemoteException e)
+	      { GenericIO.writelnString ("Chef " + chefID + " remote exception on orderBeenCompleted: " + e.getMessage ());
+	        System.exit (1);
+	      }
+	      return ret;
+	}
+	private boolean allPortionsDelived() { //kitStub
+		 boolean ret = false;   // return value
+
+	      try
+	      { ret = kitStub.allPortionsDelived();
+	      }
+	      catch (RemoteException e)
+	      { GenericIO.writelnString ("Chef " + chefID + " remote exception on allPortionsDelived: " + e.getMessage ());
+	        System.exit (1);
+	      }
+	      return ret;
+	}
+
+	private void BARalertWaiter() { //BarStub
+		try
+	      { 
+			barStub.alertWaiter();
+	      }
+	      catch (RemoteException e)
+	      { GenericIO.writelnString ("Chef " + chefID + " remote exception on alertWaiter to the bar: " + e.getMessage ());
+	        System.exit (1);
+	      }
+	}
 }

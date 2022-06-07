@@ -1,10 +1,10 @@
 package clientSide.entities;
 
-import clientSide.stubs.BarStub;
-import clientSide.stubs.TableStub;
-import genclass.GenericIO;
-import serverSide.main.SimulPar;
 
+import genclass.GenericIO;
+import java.rmi.*;
+import interfaces.*;
+import serverSide.main.SimulPar;
 /**
  * Student thread.
  *
@@ -32,12 +32,12 @@ public class Student extends Thread {
 	/**
 	 * Reference to the Bar
 	 */
-	private final BarStub barStub;
+	private final BarInterface barStub;
 
 	/**
 	 * Reference to the Table
 	 */
-	private final TableStub tblStub;
+	private final TableInterface tblStub;
 
 	/**
 	 * Instantiation of a Student Thread
@@ -47,7 +47,7 @@ public class Student extends Thread {
 	 * @param barStub       reference to the BarStub
 	 * @param tblStub       reference to the TableStub
 	 */
-	public Student(String name, int studentID, BarStub barStub, TableStub tblStub) {
+	public Student(String name, int studentID, BarInterface barStub, TableInterface tblStub) {
 		super(name);
 		this.studentID = studentID;
 		this.studentState = StudentStates.GGTRT;
@@ -117,18 +117,18 @@ public class Student extends Thread {
 	public void run() {
 		// Transition to 'GGTRT'
 		walk();
-		barStub.enter();
+		enter();
 		// Transition to 'TKSTT'
-		tblStub.takeASeat();
+		takeASeat();
 		// Transition to 'SELCS'
-		tblStub.selectingCourse();
-		if (!tblStub.firstToEnter()) {
-			tblStub.informCompanions();
+		selectingCourse();
+		if (!firstToEnter()) {
+			informCompanions();
 		} else {
 			// Transition to 'OGODR'
-			tblStub.organizeOrder();
-			barStub.callTheWaiter();
-			tblStub.describeOrder();
+			organizeOrder();
+			callTheWaiter();
+			describeOrder();
 		}
 		/*
 		long v = (long) (1 + 40 * Math.random());
@@ -139,13 +139,13 @@ public class Student extends Thread {
 		//GenericIO.writelnString("Going chat");
 		for (int i = 0; i < SimulPar.M; i++) {
 			// Transition to 'CHTWC'
-			tblStub.chat();
+			chat();
 			//GenericIO.writelnString("Going to eat");
 			// Transition to 'EJYML'
-			tblStub.enjoyMeal();
-			if (tblStub.lastToEat()) {
+			enjoyMeal();
+			if (lastToEat()) {
 				if (i != 2) {
-					barStub.signalWaiter();
+					signalWaiter();
 					/*
 					v = (long) (1 + 40 * Math.random());
 					try {
@@ -156,16 +156,16 @@ public class Student extends Thread {
 				//tblStub.chatAgain();
 			} else {
 				// Transition to 'CHTWC'
-				tblStub.waitForEveryoneToFinish();
+				waitForEveryoneToFinish();
 			}
 		}
-		if (tblStub.lastToEnterRestaurant()) {
-			barStub.shouldHaveArrivedEarlier();
+		if (lastToEnterRestaurant()) {
+			shouldHaveArrivedEarlier();
 			// Transition to 'PYTBL'
-			tblStub.honorTheBill();
+			honorTheBill();
 		}
 		// Transition to 'GGHOM'
-		barStub.goHome();
+		goHome();
 	}
 
 	/**
@@ -183,4 +183,196 @@ public class Student extends Thread {
 		} catch (InterruptedException e) {
 		}
 	}
+	
+	private void enter() { //barStub
+		try
+	      { 
+			 barStub.enter();
+	      }
+	      catch (RemoteException e)
+	      { GenericIO.writelnString ("Student " + studentID + " remote exception on enter: " + e.getMessage ());
+	        System.exit (1);
+	      }
+	}
+	
+	private void callTheWaiter() { //barStub
+		try
+	      { 
+			 barStub.callTheWaiter();
+	      }
+	      catch (RemoteException e)
+	      { GenericIO.writelnString ("Student " + studentID + " remote exception on callTheWaiter: " + e.getMessage ());
+	        System.exit (1);
+	      }
+	}
+	
+	private void signalWaiter() { //barStub
+		try
+	      { 
+			 barStub.signalWaiter();
+	      }
+	      catch (RemoteException e)
+	      { GenericIO.writelnString ("Student " + studentID + " remote exception on signalWaiter: " + e.getMessage ());
+	        System.exit (1);
+	      }
+	}
+	private void shouldHaveArrivedEarlier() { //barStub
+		try
+	      { 
+			 barStub.shouldHaveArrivedEarlier();
+	      }
+	      catch (RemoteException e)
+	      { GenericIO.writelnString ("Student " + studentID + " remote exception on shouldHaveArrivedEarlier: " + e.getMessage ());
+	        System.exit (1);
+	      }
+	}
+	
+	private void goHome() { //barStub
+		try
+	      { 
+			 barStub.goHome();
+	      }
+	      catch (RemoteException e)
+	      { GenericIO.writelnString ("Student " + studentID + " remote exception on goHome: " + e.getMessage ());
+	        System.exit (1);
+	      }
+	}
+	
+	private void takeASeat() { //tblStub
+		try
+	      { 
+			tblStub.takeASeat();
+	      }
+	      catch (RemoteException e)
+	      { GenericIO.writelnString ("Student " + studentID + " remote exception on takeASeat: " + e.getMessage ());
+	        System.exit (1);
+	      }
+	}
+	
+	private void selectingCourse() { //tblStub
+		try
+	      { 
+			tblStub.selectingCourse();
+	      }
+	      catch (RemoteException e)
+	      { GenericIO.writelnString ("Student " + studentID + " remote exception on selectingCourse: " + e.getMessage ());
+	        System.exit (1);
+	      }
+	}
+	
+	
+	private void organizeOrder() { //tblStub
+		try
+	      { 
+			tblStub.organizeOrder();
+	      }
+	      catch (RemoteException e)
+	      { GenericIO.writelnString ("Student " + studentID + " remote exception on organizeOrder: " + e.getMessage ());
+	        System.exit (1);
+	      }
+	}
+	
+	private void informCompanions() { //tblStub
+		try
+	      { 
+			tblStub.informCompanions();
+	      }
+	      catch (RemoteException e)
+	      { GenericIO.writelnString ("Student " + studentID + " remote exception on informCompanions: " + e.getMessage ());
+	        System.exit (1);
+	      }
+	}
+	private void describeOrder() { //tblStub
+		try
+	      { 
+			tblStub.describeOrder();
+	      }
+	      catch (RemoteException e)
+	      { GenericIO.writelnString ("Student " + studentID + " remote exception on describeOrder: " + e.getMessage ());
+	        System.exit (1);
+	      }
+	}
+	
+	private void chat() { //tblStub
+		try
+	      { 
+			tblStub.chat();
+	      }
+	      catch (RemoteException e)
+	      { GenericIO.writelnString ("Student " + studentID + " remote exception on chat: " + e.getMessage ());
+	        System.exit (1);
+	      }
+	}
+	
+	private void enjoyMeal() { //tblStub
+		try
+	      { 
+			tblStub.enjoyMeal();
+	      }
+	      catch (RemoteException e)
+	      { GenericIO.writelnString ("Student " + studentID + " remote exception on enjoyMeal: " + e.getMessage ());
+	        System.exit (1);
+	      }
+	}
+	
+	private void waitForEveryoneToFinish() { //tblStub
+		try
+	      { 
+			tblStub.waitForEveryoneToFinish();
+	      }
+	      catch (RemoteException e)
+	      { GenericIO.writelnString ("Student " + studentID + " remote exception on waitForEveryoneToFinish: " + e.getMessage ());
+	        System.exit (1);
+	      }
+	}
+	private void honorTheBill() { //tblStub
+		try
+	      { 
+			tblStub.honorTheBill();
+	      }
+	      catch (RemoteException e)
+	      { GenericIO.writelnString ("Student " + studentID + " remote exception on honorTheBill: " + e.getMessage ());
+	        System.exit (1);
+	      }
+	}
+	
+	private boolean lastToEat() { //tblStub
+		 boolean ret = false;   // return value
+
+	      try
+	      { ret = tblStub.lastToEat();
+	      }
+	      catch (RemoteException e)
+	      { GenericIO.writelnString ("Student " + studentID + " remote exception on lastToEat: " + e.getMessage ());
+	        System.exit (1);
+	      }
+	      return ret;
+	}
+	
+	private boolean firstToEnter() { //tblStub
+		 boolean ret = false;   // return value
+
+	      try
+	      { ret = tblStub.firstToEnter();
+	      }
+	      catch (RemoteException e)
+	      { GenericIO.writelnString ("Student " + studentID + " remote exception on firstToEnter: " + e.getMessage ());
+	        System.exit (1);
+	      }
+	      return ret;
+	}
+	
+	private boolean lastToEnterRestaurant() { //tblStub
+		 boolean ret = false;   // return value
+
+	      try
+	      { ret = tblStub.lastToEnterRestaurant();
+	      }
+	      catch (RemoteException e)
+	      { GenericIO.writelnString ("Student " + studentID + " remote exception on lastToEnterRestaurant: " + e.getMessage ());
+	        System.exit (1);
+	      }
+	      return ret;
+	}
+	
 }

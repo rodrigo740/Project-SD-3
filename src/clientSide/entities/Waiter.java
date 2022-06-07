@@ -1,9 +1,12 @@
 package clientSide.entities;
 
+import java.rmi.*;
+
 import clientSide.stubs.BarStub;
 import clientSide.stubs.KitchenStub;
 import clientSide.stubs.TableStub;
 import genclass.GenericIO;
+import interfaces.*;
 
 /**
  * Waiter thread.
@@ -31,19 +34,19 @@ public class Waiter extends Thread {
 	 * Reference to the Bar.
 	 */
 
-	private final BarStub barStub;
+	private final BarInterface barStub;
 
 	/**
 	 * Reference to the Kitchen.
 	 */
 
-	private final KitchenStub kitStub;
+	private final KitchenInterface kitStub;
 
 	/**
 	 * Reference to the Table.
 	 */
 
-	private final TableStub tblStub;
+	private final TableInterface tblStub;
 
 	/**
 	 * Instantiation of a Waiter thread.
@@ -55,7 +58,7 @@ public class Waiter extends Thread {
 	 * @param kitStub         reference to the kitchen
 	 * @param tblStub         reference to the table
 	 */
-	public Waiter(String name, int waiterID, int waiterState, BarStub barStub, KitchenStub kitStub, TableStub tblStub) {
+	public Waiter(String name, int waiterID, int waiterState, BarInterface barStub, KitchenInterface kitStub, TableInterface tblStub) {
 		super(name);
 		this.waiterID = waiterID;
 		this.waiterState = WaiterStates.APPST;
@@ -113,13 +116,13 @@ public class Waiter extends Thread {
 		boolean end = false;
 		while (!end) {
 			// Transition to 'APPST'
-			oper = barStub.lookAround();
+			oper = lookAround();
 			switch (oper) {
 			case 'c':
 				// Transition to 'PRSMN'
-				tblStub.saluteTheClient();
+				saluteTheClient();
 				// Transition to 'APPST'
-				barStub.returnToTheBarAfterSalute();
+				returnToTheBarAfterSalute();
 				break;
 			case 'o':
 				/*
@@ -129,17 +132,17 @@ public class Waiter extends Thread {
 				} catch (InterruptedException e) {
 				}*/
 				// Transition to 'TKODR'
-				tblStub.getThePad();
+				getThePad();
 				// Transition to 'PCODR'
-				kitStub.handTheNoteToTheChef();
+				handTheNoteToTheChef();
 				// Transition to 'APPST'
-				barStub.returnToTheBarAfterTakingTheOrder();
+				returnToTheBarAfterTakingTheOrder();
 				break;
 			case 'p':
-				while (!tblStub.haveAllPortionsBeenServed()) {
+				while (!haveAllPortionsBeenServed()) {
 					// Transition to 'WTFPT'
-					kitStub.collectPortion();
-					tblStub.deliverPortion();
+					collectPortion();
+					deliverPortion();
 					/*
 					v = (long) (1 + 40 * Math.random());
 					try {
@@ -148,21 +151,21 @@ public class Waiter extends Thread {
 					}*/
 				}
 				// Transition to 'APPST'
-				barStub.returnToTheBarAfterPortionsDelivered();
+				returnToTheBarAfterPortionsDelivered();
 				break;
 			case 'b':
 				// Transition to 'PRCBL'
-				barStub.prepareBill();
+				prepareBill();
 				// Transition to 'RECPM'
-				tblStub.presentBill();
-				barStub.receivedPayment();
+				TablepresentBill();
+				receivedPayment();
 				// Transition to 'APPST'
-				barStub.returnToTheBar();
+				returnToTheBar();
 				break;
 			case 'g':
-				barStub.sayGoodbye();
+				sayGoodbye();
 				// Transition to 'APPST'
-				barStub.returnToTheBar();
+				returnToTheBar();
 				break;
 			case 'e':
 				end = true;
@@ -170,4 +173,173 @@ public class Waiter extends Thread {
 			}
 		}
 	}
+	
+	private char lookAround() { //barStub
+		char ret = ' ';
+		try
+	      { 
+			 ret = barStub.lookAround();
+	      }
+	      catch (RemoteException e)
+	      { GenericIO.writelnString ("Waiter " + waiterID + " remote exception on lookAround: " + e.getMessage ());
+	        System.exit (1);
+	      }
+		return ret;
+	}
+	
+	private void returnToTheBarAfterSalute() { //barStub
+		try
+	      { 
+			 barStub.returnToTheBarAfterSalute();
+	      }
+	      catch (RemoteException e)
+	      { GenericIO.writelnString ("Waiter " + waiterID + " remote exception on returnToTheBarAfterSalute: " + e.getMessage ());
+	        System.exit (1);
+	      }
+	}
+	
+	private void returnToTheBarAfterTakingTheOrder() { //barStub
+		try
+	      { 
+			 barStub.returnToTheBarAfterTakingTheOrder();
+	      }
+	      catch (RemoteException e)
+	      { GenericIO.writelnString ("Waiter " + waiterID + " remote exception on returnToTheBarAfterTakingTheOrder: " + e.getMessage ());
+	        System.exit (1);
+	      }
+	}
+	
+	private void returnToTheBarAfterPortionsDelivered() { //barStub
+		try
+	      { 
+			 barStub.returnToTheBarAfterPortionsDelivered();
+	      }
+	      catch (RemoteException e)
+	      { GenericIO.writelnString ("Waiter " + waiterID + " remote exception on returnToTheBarAfterPortionsDelivered: " + e.getMessage ());
+	        System.exit (1);
+	      }
+	}
+	
+	private void prepareBill() { //barStub
+		try
+	      { 
+			 barStub.prepareBill();
+	      }
+	      catch (RemoteException e)
+	      { GenericIO.writelnString ("Waiter " + waiterID + " remote exception on prepareBill: " + e.getMessage ());
+	        System.exit (1);
+	      }
+	}
+	
+	private void receivedPayment() { //barStub
+		try
+	      { 
+			 barStub.receivedPayment();
+	      }
+	      catch (RemoteException e)
+	      { GenericIO.writelnString ("Waiter " + waiterID + " remote exception on receivedPayment: " + e.getMessage ());
+	        System.exit (1);
+	      }
+	}
+	
+	private void returnToTheBar() { //barStub
+		try
+	      { 
+			 barStub.returnToTheBar();
+	      }
+	      catch (RemoteException e)
+	      { GenericIO.writelnString ("Waiter " + waiterID + " remote exception on returnToTheBar: " + e.getMessage ());
+	        System.exit (1);
+	      }
+	}
+	
+	
+	private void sayGoodbye() { //barStub
+		try
+	      { 
+			 barStub.sayGoodbye();
+	      }
+	      catch (RemoteException e)
+	      { GenericIO.writelnString ("Waiter " + waiterID + " remote exception on sayGoodbye: " + e.getMessage ());
+	        System.exit (1);
+	      }
+	}
+	
+	
+	private void saluteTheClient() { //tblStub
+		try
+	      { 
+			 tblStub.saluteTheClient();
+	      }
+	      catch (RemoteException e)
+	      { GenericIO.writelnString ("Waiter " + waiterID + " remote exception on saluteTheClient: " + e.getMessage ());
+	        System.exit (1);
+	      }
+	}
+	private void getThePad() { //tblStub
+		try
+	      { 
+			 tblStub.getThePad();
+	      }
+	      catch (RemoteException e)
+	      { GenericIO.writelnString ("Waiter " + waiterID + " remote exception on getThePad: " + e.getMessage ());
+	        System.exit (1);
+	      }
+	}
+	private void deliverPortion() { //tblStub
+		try
+	      { 
+			 tblStub.deliverPortion();
+	      }
+	      catch (RemoteException e)
+	      { GenericIO.writelnString ("Waiter " + waiterID + " remote exception on deliverPortion: " + e.getMessage ());
+	        System.exit (1);
+	      }
+	}
+	private void TablepresentBill() { //tblStub
+		try
+	      { 
+			 tblStub.presentBill();
+	      }
+	      catch (RemoteException e)
+	      { GenericIO.writelnString ("Waiter " + waiterID + " remote exception on presentBill: " + e.getMessage ());
+	        System.exit (1);
+	      }
+	}
+	private boolean haveAllPortionsBeenServed() { //tblStub
+		 boolean ret = false;   // return value
+
+	      try
+	      { ret = tblStub.haveAllPortionsBeenServed();
+	      }
+	      catch (RemoteException e)
+	      { GenericIO.writelnString ("Waiter " + waiterID + " remote exception on haveAllPortionsBeenServed: " + e.getMessage ());
+	        System.exit (1);
+	      }
+	      return ret;
+	}
+	
+
+	private void handTheNoteToTheChef() { //kitStub
+		try
+	      { 
+			 kitStub.handTheNoteToTheChef();
+	      }
+	      catch (RemoteException e)
+	      { GenericIO.writelnString ("Waiter " + waiterID + " remote exception on handTheNoteToTheChef: " + e.getMessage ());
+	        System.exit (1);
+	      }
+	}
+	
+	private void collectPortion() { //kitStub
+		try
+	      { 
+			 kitStub.collectPortion();
+	      }
+	      catch (RemoteException e)
+	      { GenericIO.writelnString ("Waiter " + waiterID + " remote exception on collectPortion: " + e.getMessage ());
+	        System.exit (1);
+	      }
+	}
 }
+
