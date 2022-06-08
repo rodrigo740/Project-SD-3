@@ -28,5 +28,27 @@ public interface TableInterface extends Remote{
 	public void presentBill(); //table
 	public boolean haveAllPortionsBeenServed(); //table
 	
+  /**
+   *  Operation end of work.
+   *
+   *   New operation.
+   *
+   *      @param studentId student id
+   *      @throws RemoteException if either the invocation of the remote method, or the communication with the registry
+   *                              service fails
+   */
+
+   public void endOperation (int studentId) throws RemoteException;
+
+  /**
+   *   Operation server shutdown.
+   *
+   *   New operation.
+   *
+   *     @throws RemoteException if either the invocation of the remote method, or the communication with the registry
+   *                             service fails
+   */
+
+   public void shutdown () throws RemoteException;
 	
 }

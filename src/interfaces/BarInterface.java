@@ -25,5 +25,28 @@ public interface BarInterface extends Remote{
 	public void returnToTheBar();//waiter
 	public void sayGoodbye();//waiter
 	
+  /**
+   *  Operation end of work.
+   *
+   *   New operation.
+   *
+   *      @param waiterId waiter id
+   *      @throws RemoteException if either the invocation of the remote method, or the communication with the registry
+   *                              service fails
+   */
+
+    public void endOperation (int waiterId) throws RemoteException;
+
+  /**
+   *   Operation server shutdown.
+   *
+   *   New operation.
+   *
+   *     @throws RemoteException if either the invocation of the remote method, or the communication with the registry
+   *                             service fails
+   */
+
+    public void shutdown () throws RemoteException;
+	
 	
 }

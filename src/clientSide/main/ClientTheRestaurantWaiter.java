@@ -1,11 +1,16 @@
 package clientSide.main;
 
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
+
 import clientSide.entities.Waiter;
-import clientSide.stubs.BarStub;
-import clientSide.stubs.GeneralReposStub;
-import clientSide.stubs.KitchenStub;
-import clientSide.stubs.TableStub;
 import genclass.GenericIO;
+import interfaces.BarInterface;
+import interfaces.GeneralReposInterface;
+import interfaces.KitchenInterface;
+import interfaces.TableInterface;
 import serverSide.main.SimulPar;
 
 /**
@@ -19,92 +24,137 @@ public class ClientTheRestaurantWaiter {
 	 * Main method.
 	 *
 	 * @param args runtime arguments 
-	 * 			args[0] - name of the platform where is located the table server 
-	 *          args[1] - name of the platform where is located the bar server 
-	 *          args[2] - name of the platform where is located the kitchen server 
-	 *          args[3] - port number for listening to service requests 
-	 *          args[4] - port number for listening to service requests
-	 *          args[5] - port number for listening to service requests 
-	 *          args[6] - name of the platform where is located the general repository server 
-	 *          args[7] - port number for listening to service requests
-	 */
+	 * 			  args[0] - name of the platform where is located the RMI registering service
+     *        	  args[1] - port number where the registering service is listening to service requests
+     *        	  args[2] - name of the logging file
+     *        	  args[3] - number of iterations of the customer life cycle
+     */
 	public static void main(String[] args) {
+		
+		  String rmiRegHostName;                                         // name of the platform where is located the RMI registering service
+	      int rmiRegPortNumb = -1;                                       // port number where the registering service is listening to service requests
+	      String fileName;                                               // name of the logging file
+	      int nIter = -1;                                                // number of iterations of the customer life cycle
 
-		String tableServerHostName; // name of the platform where is located the table server
-		int tableServerPortNumb = -1; // port number for listening to service requests
-		String barServerHostName; // name of the platform where is located the bar server
-		int barServerPortNumb = -1; // port number for listening to service requests
-		String kitchenServerHostName; // name of the platform where is located the kitchen server
-		int kitchenServerPortNumb = -1; // port number for listening to service requests
-		String genReposServerHostName; // name of the platform where is located the general repository server
-		int genReposServerPortNumb = -1; // port number for listening to service requests
-		Waiter[] waiter = new Waiter[1]; // array of chef threads
-		TableStub tableStub; // remote reference to the table
-		BarStub barStub; // remote reference to the bar
-		KitchenStub kitchenStub; // remote reference to the bar
-		GeneralReposStub genReposStub; // remote reference to the general repository
+	     /* getting problem runtime parameters */
 
-		/* getting problem runtime parameters */
+	      if (args.length != 4)
+	         { GenericIO.writelnString ("Wrong number of parameters!");
+	           System.exit (1);
+	         }
+	      rmiRegHostName = args[0];
+	      try
+	      { rmiRegPortNumb = Integer.parseInt (args[1]);
+	      }
+	      catch (NumberFormatException e)
+	      { GenericIO.writelnString ("args[1] is not a number!");
+	        System.exit (1);
+	      }
+	      if ((rmiRegPortNumb < 4000) || (rmiRegPortNumb >= 65536))
+	         { GenericIO.writelnString ("args[1] is not a valid port number!");
+	           System.exit (1);
+	         }
+	      fileName = args[2];
+	      try
+	      { nIter = Integer.parseInt (args[3]);
+	      }
+	      catch (NumberFormatException e)
+	      { GenericIO.writelnString ("args[3] is not a number!");
+	        System.exit (1);
+	      }
+	      if (nIter <= 0)
+	         { GenericIO.writelnString ("args[3] is not a positive number!");
+	           System.exit (1);
+	         }
+		
+	      /* problem initialization */
+	      String nameEntryGeneralRepos = "GeneralRepository";            // public name of the general repository object
+	      GeneralReposInterface genReposStub = null;                        // remote reference to the general repository object
+	      String nameEntryBar = "Bar";                    				 // public name of the bar object
+	      String nameEntryKitchen = "Kitchen";                    		 // public name of the kitchen object
+	      String nameEntryTable = "Table";                    			 // public name of the table object
+	      TableInterface tableStub = null; 								 // remote reference to the table
+		  KitchenInterface kitchenStub = null; 							 // remote reference to the bar
+	      BarInterface barStub = null;                          		 // remote reference to the bar object
+	      Registry registry = null;                                      // remote reference for registration in the RMI registry service
+	      Waiter [] waiter = new Waiter [SimulPar.W];              		 // array of waiter threads
+	      
+		 try
+	      { registry = LocateRegistry.getRegistry (rmiRegHostName, rmiRegPortNumb);
+	      }
+	      catch (RemoteException e)
+	      { GenericIO.writelnString ("RMI registry creation exception: " + e.getMessage ());
+	        e.printStackTrace ();
+	        System.exit (1);
+	      }
 
-		if (args.length != 8) {
-			GenericIO.writelnString("Wrong number of parameters!");
-			System.exit(1);
-		}
-		tableServerHostName = args[0];
-		barServerHostName = args[1];
-		kitchenServerHostName = args[2];
-		try {
-			tableServerPortNumb = Integer.parseInt(args[3]);
-		} catch (NumberFormatException e) {
-			GenericIO.writelnString("args[3] is not a number!");
-			System.exit(1);
-		}
-		if ((tableServerPortNumb < 4000) || (tableServerPortNumb >= 65536)) {
-			GenericIO.writelnString("args[3] is not a valid port number!");
-			System.exit(1);
-		}
+		 
+		 try
+	      { genReposStub = (GeneralReposInterface) registry.lookup (nameEntryGeneralRepos);
+	      }
+	      catch (RemoteException e)
+	      { GenericIO.writelnString ("GeneralRepos lookup exception: " + e.getMessage ());
+	        e.printStackTrace ();
+	        System.exit (1);
+	      }
+	      catch (NotBoundException e)
+	      { GenericIO.writelnString ("GeneralRepos not bound exception: " + e.getMessage ());
+	        e.printStackTrace ();
+	        System.exit (1);
+	      }
+		
+		 try
+	      { barStub = (BarInterface) registry.lookup (nameEntryBar);
+	      }
+	      catch (RemoteException e)
+	      { GenericIO.writelnString ("Bar lookup exception: " + e.getMessage ());
+	        e.printStackTrace ();
+	        System.exit (1);
+	      }
+	      catch (NotBoundException e)
+	      { GenericIO.writelnString ("Bar not bound exception: " + e.getMessage ());
+	        e.printStackTrace ();
+	        System.exit (1);
+	      }
 
-		try {
-			barServerPortNumb = Integer.parseInt(args[4]);
-		} catch (NumberFormatException e) {
-			GenericIO.writelnString("args[4] is not a number!");
-			System.exit(1);
-
-		}
-		if ((barServerPortNumb < 4000) || (barServerPortNumb >= 65536)) {
-			GenericIO.writelnString("args[4] is not a valid port number!");
-			System.exit(1);
-		}
-
-		try {
-			kitchenServerPortNumb = Integer.parseInt(args[5]);
-		} catch (NumberFormatException e) {
-			GenericIO.writelnString("args[5] is not a number!");
-			System.exit(1);
-
-		}
-		if ((kitchenServerPortNumb < 4000) || (kitchenServerPortNumb >= 65536)) {
-			GenericIO.writelnString("args[5] is not a valid port number!");
-			System.exit(1);
-		}
-		genReposServerHostName = args[6];
-		try {
-			genReposServerPortNumb = Integer.parseInt(args[7]);
-		} catch (NumberFormatException e) {
-			GenericIO.writelnString("args[7] is not a number!");
-			System.exit(1);
-		}
-		if ((genReposServerPortNumb < 4000) || (genReposServerPortNumb >= 65536)) {
-			GenericIO.writelnString("args[7] is not a valid port number!");
-			System.exit(1);
-		}
-
-		/* problem initialization */
-
-		tableStub = new TableStub(tableServerHostName, tableServerPortNumb);
-		barStub = new BarStub(barServerHostName, barServerPortNumb);
-		kitchenStub = new KitchenStub(kitchenServerHostName, kitchenServerPortNumb);
-		genReposStub = new GeneralReposStub(genReposServerHostName, genReposServerPortNumb);
+		 try
+	      { kitchenStub = (KitchenInterface) registry.lookup (nameEntryKitchen);
+	      }
+	      catch (RemoteException e)
+	      { GenericIO.writelnString ("Kitchen lookup exception: " + e.getMessage ());
+	        e.printStackTrace ();
+	        System.exit (1);
+	      }
+	      catch (NotBoundException e)
+	      { GenericIO.writelnString ("Kitchen not bound exception: " + e.getMessage ());
+	        e.printStackTrace ();
+	        System.exit (1);
+	      }
+		 
+		 
+		 try
+	      { tableStub = (TableInterface) registry.lookup (nameEntryTable);
+	      }
+	      catch (RemoteException e)
+	      { GenericIO.writelnString ("Table lookup exception: " + e.getMessage ());
+	        e.printStackTrace ();
+	        System.exit (1);
+	      }
+	      catch (NotBoundException e)
+	      { GenericIO.writelnString ("Table not bound exception: " + e.getMessage ());
+	        e.printStackTrace ();
+	        System.exit (1);
+	      } 
+		 
+		 try
+	     { genReposStub.initSimul (fileName, nIter);
+	     }
+	     catch (RemoteException e)
+	     { GenericIO.writelnString ("Waiter generator remote exception on initSimul: " + e.getMessage ());
+	       System.exit (1);
+	     }
+		 
+		
 		for (int i = 0; i < SimulPar.W; i++)
 			waiter[i] = new Waiter("waiter_" + (i + 1), i, 0, barStub, kitchenStub, tableStub);
 
@@ -118,7 +168,12 @@ public class ClientTheRestaurantWaiter {
 		GenericIO.writelnString();
 		for (int i = 0; i < SimulPar.W; i++) {
 			while (waiter[i].isAlive()) {
-				barStub.endOperation(i);
+				try {
+					barStub.endOperation(i);
+				} catch (RemoteException e) { 
+					GenericIO.writelnString ("Bar generator remote exception on Bar endOperation: " + e.getMessage ());
+		            System.exit (1);
+				}
 				Thread.yield();
 			}
 			try {
@@ -128,10 +183,34 @@ public class ClientTheRestaurantWaiter {
 			GenericIO.writelnString("The waiter " + (i + 1) + " has terminated.");
 		}
 		GenericIO.writelnString();
-		tableStub.shutdown();
-		barStub.shutdown();
-		kitchenStub.shutdown();
-		genReposStub.shutdown();
+		
+		try {
+			tableStub.shutdown();
+		}catch (RemoteException e){ 
+			GenericIO.writelnString ("Barber generator remote exception on BarberShop shutdown: " + e.getMessage ());
+		    System.exit (1);
+		}
+		
+		try {
+			barStub.shutdown();
+		}catch (RemoteException e){ 
+			GenericIO.writelnString ("Barber generator remote exception on BarberShop shutdown: " + e.getMessage ());
+		    System.exit (1);
+		}
+		try {
+			kitchenStub.shutdown();
+		}catch (RemoteException e){ 
+			GenericIO.writelnString ("Barber generator remote exception on BarberShop shutdown: " + e.getMessage ());
+		    System.exit (1);
+		}
+		try {
+			genReposStub.shutdown();
+		}catch (RemoteException e){ 
+			GenericIO.writelnString ("Barber generator remote exception on BarberShop shutdown: " + e.getMessage ());
+		    System.exit (1);
+		}
+
+		
 	}
 
 }

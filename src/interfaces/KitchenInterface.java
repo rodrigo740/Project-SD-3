@@ -23,4 +23,26 @@ public interface KitchenInterface extends Remote{
 	public void handTheNoteToTheChef(); //Waiter
 	public void collectPortion(); //Waiter
 	
+	  /**
+	   *  Operation end of work.
+	   *
+	   *   New operation.
+	   *
+	   *      @param chefId chef id
+	   *      @throws RemoteException if either the invocation of the remote method, or the communication with the registry
+	   *                              service fails
+	   */
+
+	   public void endOperation (int chefId) throws RemoteException;
+
+	  /**
+	   *   Operation server shutdown.
+	   *
+	   *   New operation.
+	   *
+	   *     @throws RemoteException if either the invocation of the remote method, or the communication with the registry
+	   *                             service fails
+	   */
+
+	   public void shutdown () throws RemoteException;
 }

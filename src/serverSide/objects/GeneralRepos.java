@@ -287,4 +287,19 @@ public class GeneralRepos implements GeneralReposInterface {
 			System.exit(1);
 		}
 	}
+
+	@Override
+	public void setWaiterState(int waiterID, int state) {
+		waiterState = state;
+		reportStatus();
+		
+	}
+
+	@Override
+	public void setChefState(int chefID, int state) {
+		// TODO Auto-generated method stub
+		chefState = state;
+		reportStatus();
+		
+	}
 }

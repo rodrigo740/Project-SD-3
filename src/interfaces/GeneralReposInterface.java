@@ -10,7 +10,7 @@ import java.rmi.*;
 public interface GeneralReposInterface extends Remote{
 
 	
-	/**
+	 /**
 	   *   Operation initialization of simulation.
 	   *
 	   *   New operation.
@@ -21,7 +21,7 @@ public interface GeneralReposInterface extends Remote{
 	   *                             service fails
 	   */
 
-	   public void initSimul (String logFileName) throws RemoteException;
+	   public void initSimul (String logFileName, int nIter) throws RemoteException;
 
 	  /**
 	   *   Operation server shutdown.

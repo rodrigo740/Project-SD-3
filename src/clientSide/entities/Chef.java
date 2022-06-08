@@ -1,7 +1,10 @@
 package clientSide.entities;
 
-import java.rmi.*;
+
 import interfaces.*;
+
+import java.rmi.*;
+
 import genclass.GenericIO;
 
 /**
