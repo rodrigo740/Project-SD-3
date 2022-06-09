@@ -1,5 +1,7 @@
 package serverSide.objects;
 
+import java.rmi.RemoteException;
+
 import clientSide.entities.Student;
 import clientSide.entities.StudentStates;
 import clientSide.entities.Waiter;
@@ -201,9 +203,10 @@ public class Table implements TableInterface{
 	 * Operation salute the client.
 	 *
 	 * It is called by a waiter to salute the client
+	 * @throws RemoteException 
 	 * 
 	 */
-	public synchronized void saluteTheClient() {
+	public synchronized void saluteTheClient() throws RemoteException {
 		// set state of waiter
 		((Waiter) Thread.currentThread()).setWaiterState(WaiterStates.PRSMN);
 		reposStub.setWaiterState(((Waiter) Thread.currentThread()).getWaiterID(), WaiterStates.PRSMN);
@@ -225,9 +228,10 @@ public class Table implements TableInterface{
 	 * Operation deliver portion.
 	 *
 	 * It is called by a waiter to deliver a portion to a student
+	 * @throws RemoteException 
 	 * 
 	 */
-	public synchronized void deliverPortion() {
+	public synchronized void deliverPortion() throws RemoteException {
 		portionsDelivered++;
 		reposStub.setPortionsDelivered(portionsDelivered);
 		setPortionDelivered(true);
@@ -246,9 +250,10 @@ public class Table implements TableInterface{
 	 * Operation present the bill.
 	 *
 	 * It is called by a waiter to present the bill to the student
+	 * @throws RemoteException 
 	 * 
 	 */
-	public synchronized void presentBill() {
+	public synchronized void presentBill() throws RemoteException {
 		// set state of waiter
 		((Waiter) Thread.currentThread()).setWaiterState(WaiterStates.RECPM);
 		reposStub.setWaiterState(((Waiter) Thread.currentThread()).getWaiterID(), WaiterStates.RECPM);
@@ -282,10 +287,11 @@ public class Table implements TableInterface{
 	 * Operation get the pad
 	 *
 	 * It is called by a waiter to get the pad
+	 * @throws RemoteException 
 	 * 
 	 */
 
-	public synchronized void getThePad() {
+	public synchronized void getThePad() throws RemoteException {
 		// set state of waiter
 		((Waiter) Thread.currentThread()).setWaiterState(WaiterStates.TKODR);
 		reposStub.setWaiterState(((Waiter) Thread.currentThread()).getWaiterID(), WaiterStates.TKODR);
@@ -386,9 +392,10 @@ public class Table implements TableInterface{
 	 * Operation take a seat
 	 *
 	 * It is called by a student when it wants to take a seat at the table
+	 * @throws RemoteException 
 	 * 
 	 */
-	public synchronized void takeASeat() {
+	public synchronized void takeASeat() throws RemoteException {
 		int studentID;
 		// set state of student
 		studentID = ((Student) Thread.currentThread()).getStudentID();
@@ -424,9 +431,10 @@ public class Table implements TableInterface{
 	 * Operation selecting the course
 	 *
 	 * It is called by a student to know if all the portions have been served
+	 * @throws RemoteException 
 	 * 
 	 */
-	public synchronized void selectingCourse() {
+	public synchronized void selectingCourse() throws RemoteException {
 		int studentID;
 		// set state of student
 		studentID = ((Student) Thread.currentThread()).getStudentID();
@@ -468,10 +476,11 @@ public class Table implements TableInterface{
 	 * Operation organize order
 	 *
 	 * It is called by a student to start organizing the order
+	 * @throws RemoteException 
 	 * 
 	 */
 
-	public synchronized void organizeOrder() {
+	public synchronized void organizeOrder() throws RemoteException {
 		int studentID;
 		// set state of student
 		studentID = ((Student) Thread.currentThread()).getStudentID();
@@ -527,10 +536,11 @@ public class Table implements TableInterface{
 	 * Operation chat
 	 *
 	 * It is called by a student to start chatting with the companions
+	 * @throws RemoteException 
 	 * 
 	 */
 
-	public synchronized void chat() {
+	public synchronized void chat() throws RemoteException {
 		int studentID;
 		// set state of student
 		studentID = ((Student) Thread.currentThread()).getStudentID();
@@ -572,10 +582,11 @@ public class Table implements TableInterface{
 	 * Operation enjoy the meal
 	 *
 	 * It is called by a student to start eating the portion
+	 * @throws RemoteException 
 	 * 
 	 */
 
-	public synchronized void enjoyMeal() {
+	public synchronized void enjoyMeal() throws RemoteException {
 		notifyAll();
 		int studentID;
 		// set state of student
@@ -595,9 +606,10 @@ public class Table implements TableInterface{
 	 * 
 	 * @return true, if was the last to eat the portion -
      *         false, otherwise
+	 * @throws RemoteException 
 	 */
 
-	public synchronized boolean lastToEat() {
+	public synchronized boolean lastToEat() throws RemoteException {
 		int studentID;
 		// set state of student
 		studentID = ((Student) Thread.currentThread()).getStudentID();
@@ -643,10 +655,11 @@ public class Table implements TableInterface{
 	 * Operation honor the bill
 	 *
 	 * It is called by a student to honor the bill
+	 * @throws RemoteException 
 	 * 
 	 */
 
-	public synchronized void honorTheBill() {
+	public synchronized void honorTheBill() throws RemoteException {
 		int studentID;
 		// set state of student
 		studentID = ((Student) Thread.currentThread()).getStudentID();
@@ -670,9 +683,10 @@ public class Table implements TableInterface{
 	 * Operation go home
 	 *
 	 * It is called by a student to leave the restaurant and go home
+	 * @throws RemoteException 
 	 * 
 	 */
-	public synchronized void goHome() {
+	public synchronized void goHome() throws RemoteException {
 		int studentID;
 		// set state of student
 		studentID = ((Student) Thread.currentThread()).getStudentID();
@@ -685,9 +699,10 @@ public class Table implements TableInterface{
 	 *
 	 * It is called by a student to wait of everyone to finish eating the current
 	 * course
+	 * @throws RemoteException 
 	 * 
 	 */
-	public synchronized void waitForEveryoneToFinish() {
+	public synchronized void waitForEveryoneToFinish() throws RemoteException {
 		int studentID;
 		// set state of student
 		studentID = ((Student) Thread.currentThread()).getStudentID();

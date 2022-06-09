@@ -9,24 +9,24 @@ import java.rmi.*;
 
 public interface TableInterface extends Remote{
 
-	public void takeASeat(); //student
-	public void selectingCourse(); //student
-	public void organizeOrder(); //student
-	public void informCompanions(); //student
-	public void describeOrder(); //student
-	public void chat(); //student
-	public void enjoyMeal(); //student
-	public void waitForEveryoneToFinish(); //student
-	public void honorTheBill(); //student
-	public boolean lastToEat(); //student
-	public boolean firstToEnter(); //student
-	public boolean lastToEnterRestaurant(); //student
+	public void takeASeat() throws RemoteException; //student
+	public void selectingCourse() throws RemoteException; //student
+	public void organizeOrder() throws RemoteException; //student
+	public void informCompanions() throws RemoteException; //student
+	public void describeOrder() throws RemoteException; //student
+	public void chat() throws RemoteException; //student
+	public void enjoyMeal() throws RemoteException; //student
+	public void waitForEveryoneToFinish() throws RemoteException; //student
+	public void honorTheBill() throws RemoteException; //student
+	public boolean lastToEat() throws RemoteException; //student
+	public boolean firstToEnter() throws RemoteException; //student
+	public boolean lastToEnterRestaurant() throws RemoteException; //student
 	
-	public void saluteTheClient(); //table
-	public void getThePad(); //table
-	public void deliverPortion(); //table  
-	public void presentBill(); //table
-	public boolean haveAllPortionsBeenServed(); //table
+	public void saluteTheClient()throws RemoteException; //table
+	public void getThePad() throws RemoteException; //table
+	public void deliverPortion() throws RemoteException; //table  
+	public void presentBill() throws RemoteException; //table
+	public boolean haveAllPortionsBeenServed() throws RemoteException; //table
 	
   /**
    *  Operation end of work.
