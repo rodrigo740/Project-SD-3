@@ -142,7 +142,7 @@ public class ClientTheRestaurantStudent {
       }
 	 
 	 try
-     { genReposStub.initSimul (fileName, nIter);
+     { genReposStub.initSimul (fileName);
      }
      catch (RemoteException e)
      { GenericIO.writelnString ("Student generator remote exception on initSimul: " + e.getMessage ());
