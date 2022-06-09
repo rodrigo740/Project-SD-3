@@ -9,19 +9,19 @@ import java.rmi.*;
 
 public interface KitchenInterface extends Remote{
 
-	public void watchTheNews(); //chef
-	public void startPreparations(); //chef
-	public void continuePreparation(); //chef
-	public void proceedToPresentation(); //chef
-	public void deliverPortion(); //chef
-	public void haveNextPortionReady(); //chef
-	public void alertWaiter(); //chef
-	public void cleanUp(); //chef
-	public boolean orderBeenCompleted(); //chef
-	public boolean allPortionsDelived(); //chef
+	public void watchTheNews() throws RemoteException; //chef
+	public void startPreparations() throws RemoteException; //chef
+	public void continuePreparation() throws RemoteException; //chef
+	public void proceedToPresentation() throws RemoteException; //chef
+	public void deliverPortion() throws RemoteException; //chef
+	public void haveNextPortionReady() throws RemoteException; //chef
+	public void alertWaiter() throws RemoteException; //chef
+	public void cleanUp() throws RemoteException; //chef
+	public boolean orderBeenCompleted() throws RemoteException; //chef
+	public boolean allPortionsDelived() throws RemoteException; //chef
 	
-	public void handTheNoteToTheChef(); //Waiter
-	public void collectPortion(); //Waiter
+	public void handTheNoteToTheChef() throws RemoteException; //Waiter
+	public void collectPortion() throws RemoteException; //Waiter
 	
 	  /**
 	   *  Operation end of work.

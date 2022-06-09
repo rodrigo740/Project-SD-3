@@ -1,10 +1,11 @@
 package serverSide.objects;
 
+import java.rmi.RemoteException;
+
 import clientSide.entities.Chef;
 import clientSide.entities.ChefStates;
 import clientSide.entities.Waiter;
 import clientSide.entities.WaiterStates;
-import genclass.GenericIO;
 import interfaces.GeneralReposInterface;
 import interfaces.KitchenInterface;
 import serverSide.main.ServerKitchen;
@@ -107,10 +108,11 @@ public class Kitchen implements KitchenInterface{
 	 * Operation hand the note to the Chef.
 	 *
 	 * It is called by a waiter to deliver the order to the chef
+	 * @throws RemoteException 
 	 * 
 	 */
-
-	public synchronized void handTheNoteToTheChef() {
+	@Override
+	public synchronized void handTheNoteToTheChef() throws RemoteException {
 		// set state of waiter
 		((Waiter) Thread.currentThread()).setWaiterState(WaiterStates.PCODR);
 		reposStub.setWaiterState(((Waiter) Thread.currentThread()).getWaiterID(), WaiterStates.PCODR);
@@ -124,10 +126,11 @@ public class Kitchen implements KitchenInterface{
 	 *
 	 * It is called by a chef while waiting for and order to be delivered by the
 	 * waiter.
+	 * @throws RemoteException 
 	 *
 	 */
-
-	public synchronized void watchTheNews() {
+	@Override
+	public synchronized void watchTheNews() throws RemoteException {
 		// set state of chef
 		((Chef) Thread.currentThread()).setChefState(ChefStates.WAFOR);
 		reposStub.setChefState(((Chef) Thread.currentThread()).getChefID(), ChefStates.WAFOR);
@@ -146,10 +149,11 @@ public class Kitchen implements KitchenInterface{
 	 * Operation start preparations.
 	 *
 	 * It is called by a chef after receiving and order
+	 * @throws RemoteException 
 	 *
 	 */
-
-	public synchronized void startPreparations() {
+	@Override
+	public synchronized void startPreparations() throws RemoteException {
 		// set state of chef
 		((Chef) Thread.currentThread()).setChefState(ChefStates.PRPCS);
 		reposStub.setChefState(((Chef) Thread.currentThread()).getChefID(), ChefStates.PRPCS);
@@ -159,10 +163,11 @@ public class Kitchen implements KitchenInterface{
 	 * Operation continue preparations.
 	 *
 	 * It is called by a chef after the chef delivered a portion
+	 * @throws RemoteException 
 	 *
 	 */
-
-	public synchronized void continuePreparation() {
+	@Override
+	public synchronized void continuePreparation() throws RemoteException {
 		// set state of chef
 		((Chef) Thread.currentThread()).setChefState(ChefStates.PRPCS);
 		reposStub.setChefState(((Chef) Thread.currentThread()).getChefID(), ChefStates.PRPCS);
@@ -174,10 +179,11 @@ public class Kitchen implements KitchenInterface{
 	 * Operation proceed to presentation.
 	 *
 	 * It is called by a chef after preparing a portion
+	 * @throws RemoteException 
 	 *
 	 */
-
-	public synchronized void proceedToPresentation() {
+	@Override
+	public synchronized void proceedToPresentation() throws RemoteException {
 		// set state of chef
 		((Chef) Thread.currentThread()).setChefState(ChefStates.DSHPT);
 		reposStub.setChefState(((Chef) Thread.currentThread()).getChefID(), ChefStates.DSHPT);
@@ -193,7 +199,7 @@ public class Kitchen implements KitchenInterface{
 	 * @return true, if all portion have been delivered -
      *            false, otherwise
 	 */
-
+	@Override
 	public synchronized boolean allPortionsDelived() {
 		return SimulPar.N == deliveredPortions;
 	}
@@ -202,10 +208,11 @@ public class Kitchen implements KitchenInterface{
 	 * Operation deliver portion.
 	 *
 	 * It is called by a chef to deliver a portion to the waiter
+	 * @throws RemoteException 
 	 *
 	 */
-
-	public synchronized void deliverPortion() {
+	@Override
+	public synchronized void deliverPortion() throws RemoteException {
 		// set state of chef
 		((Chef) Thread.currentThread()).setChefState(ChefStates.DLVPT);
 		reposStub.setChefState(((Chef) Thread.currentThread()).getChefID(), ChefStates.DLVPT);
@@ -229,10 +236,11 @@ public class Kitchen implements KitchenInterface{
 	 * Operation collect portion.
 	 *
 	 * It is called by a waiter to collect a portion
+	 * @throws RemoteException 
 	 *
 	 */
-
-	public synchronized void collectPortion() {
+	@Override
+	public synchronized void collectPortion() throws RemoteException {
 		// set state of waiter
 		((Waiter) Thread.currentThread()).setWaiterState(WaiterStates.WTFPT);
 		reposStub.setWaiterState(((Waiter) Thread.currentThread()).getWaiterID(), WaiterStates.WTFPT);
@@ -254,10 +262,11 @@ public class Kitchen implements KitchenInterface{
 	 * Operation have next portion ready.
 	 *
 	 * It is called by a chef in order to start dishing another portion
+	 * @throws RemoteException 
 	 *
 	 */
-
-	public synchronized void haveNextPortionReady() {
+	@Override
+	public synchronized void haveNextPortionReady() throws RemoteException {
 		// set state of chef
 		((Chef) Thread.currentThread()).setChefState(ChefStates.DSHPT);
 		reposStub.setChefState(((Chef) Thread.currentThread()).getChefID(), ChefStates.DSHPT);
@@ -271,9 +280,8 @@ public class Kitchen implements KitchenInterface{
 	 * @return @return true, if the order has been completed -
      *            false, otherwise
 	 */
-	
-
-	public synchronized boolean orderBeenCompleted() {
+	@Override
+	public synchronized boolean orderBeenCompleted() throws RemoteException{
 		// increment delivered courses
 		deliveredCourses++;
 		return SimulPar.M == deliveredCourses;
@@ -283,10 +291,11 @@ public class Kitchen implements KitchenInterface{
 	 * Operation clean up.
 	 *
 	 * It is called by a chef to finish its service
+	 * @throws RemoteException 
 	 *
 	 */
-
-	public synchronized void cleanUp() {
+	@Override
+	public synchronized void cleanUp() throws RemoteException {
 		// set state of chef
 		((Chef) Thread.currentThread()).setChefState(ChefStates.CLSSV);
 		reposStub.setChefState(((Chef) Thread.currentThread()).getChefID(), ChefStates.CLSSV);
@@ -299,7 +308,8 @@ public class Kitchen implements KitchenInterface{
 	 * collected
 	 *
 	 */
-	public synchronized void alertWaiter() {
+	@Override
+	public synchronized void alertWaiter() throws RemoteException{
 		// set portionReady flag and waking up the waiter
 		setPortionReady(true);
 		notifyAll();
@@ -312,8 +322,8 @@ public class Kitchen implements KitchenInterface{
 	 * 
 	 * @param chefID chef identification
 	 */
-
-	public synchronized void endOperation(int chefID) {
+	@Override
+	public synchronized void endOperation(int chefID) throws RemoteException{
 		while (nEntities == 0) { /* the chef waits for the termination of the customers */
 			try {
 				wait();
@@ -329,8 +339,8 @@ public class Kitchen implements KitchenInterface{
 	 *
 	 * New operation.
 	 */
-
-	public synchronized void shutdown() {
+	@Override
+	public synchronized void shutdown() throws RemoteException{
 		nEntities += 1;
 		if (nEntities >= SimulPar.EK)
 			ServerKitchen.shutdown();
