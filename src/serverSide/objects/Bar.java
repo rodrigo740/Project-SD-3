@@ -1,5 +1,7 @@
 package serverSide.objects;
 
+import java.rmi.RemoteException;
+
 import clientSide.entities.Student;
 import clientSide.entities.StudentStates;
 import clientSide.entities.Waiter;
@@ -134,8 +136,8 @@ public class Bar implements BarInterface {
 	 * 
 	 * @return oper operation to be performed
 	 */
-
-	public synchronized char lookAround() {
+	@Override
+	public synchronized char lookAround() throws RemoteException{
 		// if everyone left end
 		if (nLeft == SimulPar.S) {
 			setOper('e');
@@ -221,7 +223,6 @@ public class Bar implements BarInterface {
 	 *
 	 * @param action actionNeeded
 	 */
-
 	public synchronized void setActionNeeded(boolean action) {
 		actionNeeded = action;
 	}
@@ -341,7 +342,8 @@ public class Bar implements BarInterface {
 	 * It is called by a waiter to say goodbye to the student
 	 * 
 	 */
-	public synchronized void sayGoodbye() {
+	@Override
+	public synchronized void sayGoodbye() throws RemoteException {
 		nSaidGoodbye++;
 	}
 
@@ -349,9 +351,11 @@ public class Bar implements BarInterface {
 	 * Operation return to the bar
 	 *
 	 * It is called by a waiter to return to the bar
+	 * @throws RemoteException 
 	 * 
 	 */
-	public synchronized void returnToTheBar() {
+	@Override
+	public synchronized void returnToTheBar() throws RemoteException {
 		// set state of waiter
 		((Waiter) Thread.currentThread()).setWaiterState(WaiterStates.APPST);
 		reposStub.setWaiterState(((Waiter) Thread.currentThread()).getWaiterID(), WaiterStates.APPST);
@@ -361,9 +365,11 @@ public class Bar implements BarInterface {
 	 * Operation return to the bar after salute
 	 *
 	 * It is called by a waiter to return to the bar after saluting the student
+	 * @throws RemoteException 
 	 * 
 	 */
-	public synchronized void returnToTheBarAfterSalute() {
+	@Override
+	public synchronized void returnToTheBarAfterSalute() throws RemoteException {
 		nSaluted++;
 		// set state of waiter
 		((Waiter) Thread.currentThread()).setWaiterState(WaiterStates.APPST);
@@ -374,9 +380,11 @@ public class Bar implements BarInterface {
 	 * Operation return to the bar after taking the order
 	 *
 	 * It is called by a waiter to return to the bar after taking the order
+	 * @throws RemoteException 
 	 * 
 	 */
-	public synchronized void returnToTheBarAfterTakingTheOrder() {
+	@Override
+	public synchronized void returnToTheBarAfterTakingTheOrder() throws RemoteException {
 		// reset student called flag
 		studentCalled = false;
 		// set state of waiter
@@ -389,10 +397,11 @@ public class Bar implements BarInterface {
 	 *
 	 * It is called by a waiter to the bar after all portions of a course have been
 	 * delivered
+	 * @throws RemoteException 
 	 * 
 	 */
-
-	public synchronized void returnToTheBarAfterPortionsDelivered() {
+	@Override
+	public synchronized void returnToTheBarAfterPortionsDelivered() throws RemoteException {
 		waiterAlerted = false;
 		// set state of waiter
 		((Waiter) Thread.currentThread()).setWaiterState(WaiterStates.APPST);
@@ -403,9 +412,11 @@ public class Bar implements BarInterface {
 	 * Operation prepare the bill
 	 *
 	 * It is called by a waiter to prepare the bill
+	 * @throws RemoteException 
 	 * 
 	 */
-	public synchronized void prepareBill() {
+	@Override
+	public synchronized void prepareBill() throws RemoteException {
 		// set state of waiter
 		((Waiter) Thread.currentThread()).setWaiterState(WaiterStates.PRCBL);
 		reposStub.setWaiterState(((Waiter) Thread.currentThread()).getWaiterID(), WaiterStates.PRCBL);
@@ -428,8 +439,8 @@ public class Bar implements BarInterface {
 	 * It is called by a student to call the waiter to describe the order
 	 * 
 	 */
-
-	public synchronized void callTheWaiter() {
+	@Override
+	public synchronized void callTheWaiter() throws RemoteException {
 		// set bringNextCourse and studentCalled flag
 		bringNextCourse = true;
 		studentCalled = true;
@@ -445,7 +456,8 @@ public class Bar implements BarInterface {
 	 * It is called by a student to warn the waiter that it is ready to pay the bill
 	 * 
 	 */
-	public synchronized void shouldHaveArrivedEarlier() {
+	@Override
+	public synchronized void shouldHaveArrivedEarlier() throws RemoteException {
 		// set ready to pay flag
 		readyToPay = true;
 		// set action flag and oper and finally wake up the waiter
@@ -460,8 +472,8 @@ public class Bar implements BarInterface {
 	 * It is called by a student to enter the restaurant
 	 * 
 	 */
-
-	public synchronized void enter() {
+	@Override
+	public synchronized void enter() throws RemoteException {
 		// increment number of students that entered the restaurant
 		nEntered++;
 		// set action flag and oper and finally wake up the waiter
@@ -477,8 +489,8 @@ public class Bar implements BarInterface {
 	 * delivered
 	 * 
 	 */
-
-	public synchronized void alertWaiter() {
+	@Override
+	public synchronized void alertWaiter() throws RemoteException {
 		// set waiter alerted flag
 		waiterAlerted = true;
 		// set action flag and oper and finally wake up the waiter
@@ -492,9 +504,11 @@ public class Bar implements BarInterface {
 	 *
 	 * It is called by a student to warn the waiter that it can start delivering the
 	 * portions of the next course
+	 * @throws RemoteException 
 	 * 
 	 */
-	public synchronized void signalWaiter() {
+	@Override
+	public synchronized void signalWaiter() throws RemoteException {
 		// set bringNextCourse flag
 		bringNextCourse = true;
 		// set action flag and oper and finally wake up the waiter
@@ -508,9 +522,11 @@ public class Bar implements BarInterface {
 	 * Operation go home
 	 *
 	 * It is called by a student to warn the waiter that its going home
+	 * @throws RemoteException 
 	 * 
 	 */
-	public synchronized void goHome() {
+	@Override
+	public synchronized void goHome() throws RemoteException {
 		int studentID;
 		// set state of student
 		studentID = ((Student) Thread.currentThread()).getStudentID();
@@ -528,10 +544,11 @@ public class Bar implements BarInterface {
 	 * Operation received payment
 	 *
 	 * It is called by a waiter after the payment has been received
+	 * @throws RemoteException 
 	 * 
 	 */
-
-	public synchronized void receivedPayment() {
+	@Override
+	public synchronized void receivedPayment() throws RemoteException {
 		// set paymentReceived flag and reseting readyToPay flag
 		paymentReceived = true;
 		readyToPay = false;
@@ -543,9 +560,10 @@ public class Bar implements BarInterface {
 	 * New operation.
 	 *
 	 * @param waiterID waiter id
+	 * @throws RemoteException 
 	 */
-
-	public synchronized void endOperation(int waiterID) {
+	@Override
+	public synchronized void endOperation(int waiterID) throws RemoteException {
 		while (nEntities < 2) { /* the waiter waits for the termination of the students */
 			try {
 				wait();
@@ -560,9 +578,10 @@ public class Bar implements BarInterface {
 	 * Operation server shutdown.
 	 *
 	 * New operation.
+	 * @throws RemoteException 
 	 */
-
-	public synchronized void shutdown() {
+	@Override
+	public synchronized void shutdown() throws RemoteException {
 		nEntities += 1;
 		if (nEntities >= SimulPar.EB)
 			ServerBar.shutdown ();

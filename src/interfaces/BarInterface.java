@@ -9,21 +9,21 @@ import java.rmi.*;
 
 public interface BarInterface extends Remote{
 
-	public void alertWaiter(); //chef
-	public void enter(); //student
-	public void callTheWaiter();//student
-	public void signalWaiter();//student
-	public void shouldHaveArrivedEarlier();//student
-	public void goHome();//student
+	public void alertWaiter() throws RemoteException; //chef
+	public void enter() throws RemoteException; //student
+	public void callTheWaiter() throws RemoteException;//student
+	public void signalWaiter() throws RemoteException;//student
+	public void shouldHaveArrivedEarlier() throws RemoteException;//student
+	public void goHome() throws RemoteException;//student
 	
-	public char lookAround(); //waiter
-	public void returnToTheBarAfterSalute();//waiter
-	public void returnToTheBarAfterTakingTheOrder();//waiter
-	public void returnToTheBarAfterPortionsDelivered();//waiter
-	public void prepareBill();//waiter
-	public void receivedPayment();//waiter
-	public void returnToTheBar();//waiter
-	public void sayGoodbye();//waiter
+	public char lookAround() throws RemoteException; //waiter
+	public void returnToTheBarAfterSalute() throws RemoteException;//waiter
+	public void returnToTheBarAfterTakingTheOrder() throws RemoteException;//waiter
+	public void returnToTheBarAfterPortionsDelivered() throws RemoteException;//waiter
+	public void prepareBill() throws RemoteException;//waiter
+	public void receivedPayment() throws RemoteException;//waiter
+	public void returnToTheBar() throws RemoteException;//waiter
+	public void sayGoodbye() throws RemoteException;//waiter
 	
   /**
    *  Operation end of work.

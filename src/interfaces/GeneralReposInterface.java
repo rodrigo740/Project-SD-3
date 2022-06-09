@@ -16,12 +16,11 @@ public interface GeneralReposInterface extends Remote{
 	   *   New operation.
 	   *
 	   *     @param logFileName name of the logging file
-	   *     @param nIter number of iterations of the customer life cycle
 	   *     @throws RemoteException if either the invocation of the remote method, or the communication with the registry
 	   *                             service fails
 	   */
 
-	   public void initSimul (String logFileName, int nIter) throws RemoteException;
+	   public void initSimul (String logFileName) throws RemoteException;
 
 	  /**
 	   *   Operation server shutdown.
@@ -34,17 +33,17 @@ public interface GeneralReposInterface extends Remote{
 
 	   public void shutdown () throws RemoteException;
 	   
-	   public void setWaiterState(int waiterID, int waiterState);
+	   public void setWaiterState(int waiterID, int waiterState) throws RemoteException;
 	   
-	   public void setStudentState(int studentID, int studentState);
+	   public void setStudentState(int studentID, int studentState) throws RemoteException;
 	   
-	   public void setChefState (int chefID, int chefState);
+	   public void setChefState (int chefID, int chefState) throws RemoteException;
 	   
-	   public void setPortionsDelivered (int portionsDelivered);
+	   public void setPortionsDelivered (int portionsDelivered) throws RemoteException;
 	   
-	   public void setStudentSeat(int studentID, int nStudents);
+	   public void setStudentSeat(int studentID, int nStudents) throws RemoteException;
 	   
-	   public void setCoursesDelivered (int coursesDelivered);
+	   public void setCoursesDelivered (int coursesDelivered) throws RemoteException;
 	
 	
 }

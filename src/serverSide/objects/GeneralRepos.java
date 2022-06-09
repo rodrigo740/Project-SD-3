@@ -1,5 +1,6 @@
 package serverSide.objects;
 
+import java.rmi.RemoteException;
 import java.util.Objects;
 
 import clientSide.entities.ChefStates;
@@ -93,8 +94,8 @@ public class GeneralRepos implements GeneralReposInterface {
 	 *
 	 * @param logFileName name of the logging file
 	 */
-	
-	public synchronized void initSimul(String logFileName) {
+	@Override
+	public synchronized void initSimul(String logFileName) throws RemoteException {
 		if (!Objects.equals(logFileName, ""))
 			this.logFileName = logFileName;
 		reportInitialStatus();
@@ -104,8 +105,8 @@ public class GeneralRepos implements GeneralReposInterface {
 	 * Operation server shutdown.
 	 *
 	 */
-
-	public synchronized void shutdown() {
+	@Override
+	public synchronized void shutdown() throws RemoteException{
 		nEntities += 1;
 		if (nEntities >= SimulPar.EG)
 			ServerGeneralRepos.shutdown ();
@@ -114,9 +115,11 @@ public class GeneralRepos implements GeneralReposInterface {
 	/**
 	 * Set the chef state
 	 * 
+	 * @param chefID id of the chef
 	 * @param state chef state
 	 */
-	public synchronized void setChefState(int state) {
+	@Override
+	public synchronized void setChefState(int chefID, int state) throws RemoteException{
 		chefState = state;
 		reportStatus();
 	}
@@ -124,9 +127,11 @@ public class GeneralRepos implements GeneralReposInterface {
 	/**
 	 * Set the waiter State
 	 * 
+	 * @param waiterID id of the waiter
 	 * @param state waiter state
 	 */
-	public synchronized void setWaiterState(int state) {
+	@Override
+	public synchronized void setWaiterState(int waiterID, int state) throws RemoteException{
 		waiterState = state;
 		reportStatus();
 	}
@@ -137,10 +142,10 @@ public class GeneralRepos implements GeneralReposInterface {
 	 * @param id    id of the student
 	 * @param state student state
 	 */
-	public synchronized void setStudentState(int id, int state) {
+	@Override
+	public synchronized void setStudentState(int id, int state) throws RemoteException{
 		studentsState[id] = state;
 		reportStatus();
-
 	}
 
 	/**
@@ -149,7 +154,8 @@ public class GeneralRepos implements GeneralReposInterface {
 	 * @param studentID student id
 	 * @param n
 	 */
-	public synchronized void setStudentSeat(int studentID, int n) {
+	@Override
+	public synchronized void setStudentSeat(int studentID, int n) throws RemoteException{
 		seat[n] = studentID;
 	}
 
@@ -158,7 +164,8 @@ public class GeneralRepos implements GeneralReposInterface {
 	 * 
 	 * @param n  number of portions delivered
 	 */
-	public synchronized void setPortionsDelivered(int n) {
+	@Override
+	public synchronized void setPortionsDelivered(int n) throws RemoteException{
 		portionsDelivered = n;
 	}
 
@@ -167,7 +174,8 @@ public class GeneralRepos implements GeneralReposInterface {
 	 * 
 	 * @param n number courses delivered
 	 */
-	public synchronized void setCoursesDelivered(int n) {
+	@Override
+	public synchronized void setCoursesDelivered(int n) throws RemoteException{
 		coursesDelivered = n;
 	}
 
@@ -288,18 +296,4 @@ public class GeneralRepos implements GeneralReposInterface {
 		}
 	}
 
-	@Override
-	public void setWaiterState(int waiterID, int state) {
-		waiterState = state;
-		reportStatus();
-		
-	}
-
-	@Override
-	public void setChefState(int chefID, int state) {
-		// TODO Auto-generated method stub
-		chefState = state;
-		reportStatus();
-		
-	}
 }
