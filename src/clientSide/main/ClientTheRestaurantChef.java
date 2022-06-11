@@ -56,13 +56,13 @@ public class ClientTheRestaurantChef {
 		
 	      /* problem initialization */  
 	      String nameEntryGeneralRepos = "GeneralRepository";            // public name of the general repository object
-	      GeneralReposInterface genReposStub = null;                        // remote reference to the general repository object
+	      GeneralReposInterface genReposStub = null;                     // remote reference to the general repository object
 	      String nameEntryBar = "Bar";                    				 // public name of the bar object
 	      String nameEntryKitchen = "Kitchen";                    		 // public name of the kitchen object
 	      KitchenInterface kitchenStub = null; 							 // remote reference to the bar
 	      BarInterface barStub = null;                          		 // remote reference to the bar object
 	      Registry registry = null;                                      // remote reference for registration in the RMI registry service
-	      Chef[] chef = new Chef[SimulPar.C]; // array of chef threads
+	      Chef[] chef = new Chef[SimulPar.C]; 							 // array of chef threads
 			
 		
 		/* problem initialization */
@@ -118,12 +118,11 @@ public class ClientTheRestaurantChef {
 	        System.exit (1);
 	      }
 		 
-		 
 		 try
 	     { genReposStub.initSimul (fileName);
 	     }
 	     catch (RemoteException e)
-	     { GenericIO.writelnString ("Waiter generator remote exception on initSimul: " + e.getMessage ());
+	     { GenericIO.writelnString ("GeneralRepos generator remote exception on initSimul: " + e.getMessage ());
 	       System.exit (1);
 	     }
 		
@@ -134,21 +133,12 @@ public class ClientTheRestaurantChef {
 			chef[i] = new Chef("chef_" + (i + 1), i, 0, barStub, kitchenStub);
 
 		/* start of the simulation */
-
 		for (int i = 0; i < SimulPar.C; i++)
 			chef[i].start();
 
 		/* waiting for the end of the simulation */
-
 		GenericIO.writelnString();
 		for (int i = 0; i < SimulPar.C; i++) {
-			/*
-			while (chef[i].isAlive()) {
-				GenericIO.writelnString("Chef is alive");
-				kitchenStub.endOperation(i);
-				Thread.yield();
-			}
-			GenericIO.writelnString("Chef put of while");*/
 			try {
 				chef[i].join();
 			} catch (InterruptedException e) {
@@ -160,19 +150,19 @@ public class ClientTheRestaurantChef {
 		try {
 			barStub.shutdown();
 		}catch (RemoteException e){ 
-			GenericIO.writelnString ("Barber generator remote exception on BarberShop shutdown: " + e.getMessage ());
+			GenericIO.writelnString ("Chef generator remote exception on Bar shutdown: " + e.getMessage ());
 		    System.exit (1);
 		}
 		try {
 			kitchenStub.shutdown();
 		}catch (RemoteException e){ 
-			GenericIO.writelnString ("Barber generator remote exception on BarberShop shutdown: " + e.getMessage ());
+			GenericIO.writelnString ("Chef generator remote exception on Kitchen shutdown: " + e.getMessage ());
 		    System.exit (1);
 		}
 		try {
 			genReposStub.shutdown();
 		}catch (RemoteException e){ 
-			GenericIO.writelnString ("Barber generator remote exception on BarberShop shutdown: " + e.getMessage ());
+			GenericIO.writelnString ("Chef generator remote exception on GeneralRepos shutdown: " + e.getMessage ());
 		    System.exit (1);
 		}
 	}

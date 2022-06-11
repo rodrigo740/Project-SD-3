@@ -147,17 +147,7 @@ public class ClientTheRestaurantStudent {
 		/* waiting for the end of the simulation */
 
 		GenericIO.writelnString();
-		for (int i = 0; i < SimulPar.S; i++) {/*
-			while (waiter[i].isAlive()) {
-				try {
-					tableStub.endOperation(i);
-				} catch (RemoteException e) { 
-					GenericIO.writelnString ("Table generator remote exception on Bar endOperation: " + e.getMessage ());
-		            System.exit (1);
-				}
-				Thread.yield();
-			}
-			}*/
+		for (int i = 0; i < SimulPar.S; i++) {
 			try {
 				student[i].join();
 			} catch (InterruptedException e) {
@@ -168,21 +158,21 @@ public class ClientTheRestaurantStudent {
 		try {
 			tableStub.shutdown();
 		}catch (RemoteException e){ 
-			GenericIO.writelnString ("Barber generator remote exception on BarberShop shutdown: " + e.getMessage ());
+			GenericIO.writelnString ("Student generator remote exception on Table shutdown: " + e.getMessage ());
 		    System.exit (1);
 		}
 		
 		try {
 			barStub.shutdown();
 		}catch (RemoteException e){ 
-			GenericIO.writelnString ("Barber generator remote exception on BarberShop shutdown: " + e.getMessage ());
+			GenericIO.writelnString ("Student generator remote exception on Bar shutdown: " + e.getMessage ());
 		    System.exit (1);
 		}
 		
 		try {
 			genReposStub.shutdown();
 		}catch (RemoteException e){ 
-			GenericIO.writelnString ("Barber generator remote exception on BarberShop shutdown: " + e.getMessage ());
+			GenericIO.writelnString ("Student generator remote exception on GeneralRepos shutdown: " + e.getMessage ());
 		    System.exit (1);
 		}
 

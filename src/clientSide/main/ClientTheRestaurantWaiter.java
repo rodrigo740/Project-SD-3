@@ -27,7 +27,6 @@ public class ClientTheRestaurantWaiter {
 	 * 			  args[0] - name of the platform where is located the RMI registering service
      *        	  args[1] - port number where the registering service is listening to service requests
      *        	  args[2] - name of the logging file
-     *        	  args[3] - number of iterations of the customer life cycle
      */
 	public static void main(String[] args) {
 		
@@ -159,7 +158,7 @@ public class ClientTheRestaurantWaiter {
 				try {
 					barStub.endOperation(i);
 				} catch (RemoteException e) { 
-					GenericIO.writelnString ("Bar generator remote exception on Bar endOperation: " + e.getMessage ());
+					GenericIO.writelnString ("Waiter generator remote exception on Bar endOperation: " + e.getMessage ());
 		            System.exit (1);
 				}
 				Thread.yield();
@@ -175,26 +174,26 @@ public class ClientTheRestaurantWaiter {
 		try {
 			tableStub.shutdown();
 		}catch (RemoteException e){ 
-			GenericIO.writelnString ("Barber generator remote exception on BarberShop shutdown: " + e.getMessage ());
+			GenericIO.writelnString ("Waiter generator remote exception on Table shutdown: " + e.getMessage ());
 		    System.exit (1);
 		}
 		
 		try {
 			barStub.shutdown();
 		}catch (RemoteException e){ 
-			GenericIO.writelnString ("Barber generator remote exception on BarberShop shutdown: " + e.getMessage ());
+			GenericIO.writelnString ("Waiter generator remote exception on Bar shutdown: " + e.getMessage ());
 		    System.exit (1);
 		}
 		try {
 			kitchenStub.shutdown();
 		}catch (RemoteException e){ 
-			GenericIO.writelnString ("Barber generator remote exception on BarberShop shutdown: " + e.getMessage ());
+			GenericIO.writelnString ("Waiter generator remote exception on Kitchen shutdown: " + e.getMessage ());
 		    System.exit (1);
 		}
 		try {
 			genReposStub.shutdown();
 		}catch (RemoteException e){ 
-			GenericIO.writelnString ("Barber generator remote exception on BarberShop shutdown: " + e.getMessage ());
+			GenericIO.writelnString ("Waiter generator remote exception on GeneralRepos shutdown: " + e.getMessage ());
 		    System.exit (1);
 		}
 

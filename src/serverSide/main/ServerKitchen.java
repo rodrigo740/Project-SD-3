@@ -8,7 +8,7 @@ import interfaces.*;
 import genclass.GenericIO;
 
 /**
- *    Instantiation and registering of a table object.
+ *    Instantiation and registering of a Kitchen object.
  *
  *    Implementation of a client-server model of type 2 (server replication).
  *    Communication is based on Java RMI.
@@ -99,16 +99,16 @@ public class ServerKitchen {
         System.exit (1);
       }
 
-     /* instantiate a table object */
+     /* instantiate a Kitchen object */
 
-      Kitchen kitchen = new Kitchen (reposStub);                 		  // table object
-      KitchenInterface KitchenStub = null;                          // remote reference to the table object
+      Kitchen kitchen = new Kitchen (reposStub);                 	// Kitchen object
+      KitchenInterface KitchenStub = null;                          // remote reference to the Kitchen object
 
       try
       { KitchenStub = (KitchenInterface) UnicastRemoteObject.exportObject (kitchen, portNumb);
       }
       catch (RemoteException e)
-      { GenericIO.writelnString ("Table stub generation exception: " + e.getMessage ());
+      { GenericIO.writelnString ("Kitchen stub generation exception: " + e.getMessage ());
         e.printStackTrace ();
         System.exit (1);
       }
@@ -118,7 +118,7 @@ public class ServerKitchen {
 
       String nameEntryBase = "RegisterHandler";                      // public name of the object that enables the registration
                                                                      // of other remote objects
-      String nameEntryObject = "Table";                     		     // public name of the table object
+      String nameEntryObject = "Kitchen";                     		 // public name of the Kitchen object
       Register reg = null;                                           // remote reference to the object that enables the registration
                                                                      // of other remote objects
 
@@ -140,67 +140,67 @@ public class ServerKitchen {
       { reg.bind (nameEntryObject, KitchenStub);
       }
       catch (RemoteException e)
-      { GenericIO.writelnString ("Table registration exception: " + e.getMessage ());
+      { GenericIO.writelnString ("Kitchen registration exception: " + e.getMessage ());
         e.printStackTrace ();
         System.exit (1);
       }
       catch (AlreadyBoundException e)
-      { GenericIO.writelnString ("Table already bound exception: " + e.getMessage ());
+      { GenericIO.writelnString ("Kitchen already bound exception: " + e.getMessage ());
         e.printStackTrace ();
         System.exit (1);
       }
-      GenericIO.writelnString ("Table object was registered!");
+      GenericIO.writelnString ("Kitchen object was registered!");
 
      /* wait for the end of operations */
 
-      GenericIO.writelnString ("Table is in operation!");
+      GenericIO.writelnString ("Kitchen is in operation!");
       try
       { while (!end)
-          synchronized (Class.forName ("serverSide.main.ServerTable"))
+          synchronized (Class.forName ("serverSide.main.ServerKitchen"))
           { try
-            { (Class.forName ("serverSide.main.ServerTable")).wait ();
+            { (Class.forName ("serverSide.main.ServerKitchen")).wait ();
             }
             catch (InterruptedException e)
-            { GenericIO.writelnString ("Table main thread was interrupted!");
+            { GenericIO.writelnString ("Kitchen main thread was interrupted!");
             }
           }
       }
       catch (ClassNotFoundException e)
-      { GenericIO.writelnString ("The data type ServerTable was not found (blocking)!");
+      { GenericIO.writelnString ("The data type ServerKitchen was not found (blocking)!");
         e.printStackTrace ();
         System.exit (1);
       }
 
      /* server shutdown */
 
-      boolean shutdownDone = false;                                  // flag signalling the shutdown of the table service
+      boolean shutdownDone = false;                                  // flag signalling the shutdown of the Kitchen service
 
       try
       { reg.unbind (nameEntryObject);
       }
       catch (RemoteException e)
-      { GenericIO.writelnString ("Table deregistration exception: " + e.getMessage ());
+      { GenericIO.writelnString ("Kitchen deregistration exception: " + e.getMessage ());
         e.printStackTrace ();
         System.exit (1);
       }
       catch (NotBoundException e)
-      { GenericIO.writelnString ("Table not bound exception: " + e.getMessage ());
+      { GenericIO.writelnString ("Kitchen not bound exception: " + e.getMessage ());
         e.printStackTrace ();
         System.exit (1);
       }
-      GenericIO.writelnString ("Table was deregistered!");
+      GenericIO.writelnString ("Kitchen was deregistered!");
 
       try
       { shutdownDone = UnicastRemoteObject.unexportObject (kitchen, true);
       }
       catch (NoSuchObjectException e)
-      { GenericIO.writelnString ("Table unexport exception: " + e.getMessage ());
+      { GenericIO.writelnString ("Kitchen unexport exception: " + e.getMessage ());
         e.printStackTrace ();
         System.exit (1);
       }
 
       if (shutdownDone)
-         GenericIO.writelnString ("Table was shutdown!");
+         GenericIO.writelnString ("Kitchen was shutdown!");
    }
 
   /**
@@ -211,12 +211,12 @@ public class ServerKitchen {
    {
       end = true;
       try
-      { synchronized (Class.forName ("serverSide.main.ServerTable"))
-        { (Class.forName ("serverSide.main.ServerTable")).notify ();
+      { synchronized (Class.forName ("serverSide.main.ServerKitchen"))
+        { (Class.forName ("serverSide.main.ServerKitchen")).notify ();
         }
       }
      catch (ClassNotFoundException e)
-     { GenericIO.writelnString ("The data type ServerTable was not found (waking up)!");
+     { GenericIO.writelnString ("The data type ServerKitchen was not found (waking up)!");
        e.printStackTrace ();
        System.exit (1);
      }

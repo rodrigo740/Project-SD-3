@@ -9,7 +9,6 @@ import clientSide.entities.WaiterStates;
 import genclass.GenericIO;
 import genclass.TextFile;
 import interfaces.GeneralReposInterface;
-import serverSide.main.ServerBar;
 import serverSide.main.ServerGeneralRepos;
 import serverSide.main.SimulPar;
 
