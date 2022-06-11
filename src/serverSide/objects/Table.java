@@ -11,7 +11,6 @@ import commInfra.MemFIFO;
 import genclass.GenericIO;
 import interfaces.GeneralReposInterface;
 import interfaces.TableInterface;
-import serverSide.main.ServerBar;
 import serverSide.main.ServerTable;
 import serverSide.main.SimulPar;
 
@@ -209,7 +208,17 @@ public class Table implements TableInterface{
 	public synchronized void saluteTheClient() throws RemoteException {
 		// set state of waiter
 		((Waiter) Thread.currentThread()).setWaiterState(WaiterStates.PRSMN);
-		reposStub.setWaiterState(((Waiter) Thread.currentThread()).getWaiterID(), WaiterStates.PRSMN);
+		// waiter id
+		int waiterID = ((Waiter) Thread.currentThread()).getWaiterID();
+		try
+		{ 
+			reposStub.setWaiterState(waiterID, WaiterStates.PRSMN);
+		}
+		catch (RemoteException e)
+		{ 
+			GenericIO.writelnString ("Waiter " + waiterID + " remote exception on saluteTheClient - setWaiterState: " + e.getMessage ());
+			System.exit (1);
+		}
 		// setting clientSaluted flag and waking up the student
 		setClientSaluted(true);
 		notifyAll();
@@ -233,7 +242,15 @@ public class Table implements TableInterface{
 	 */
 	public synchronized void deliverPortion() throws RemoteException {
 		portionsDelivered++;
-		reposStub.setPortionsDelivered(portionsDelivered);
+		try
+		{ 
+			reposStub.setPortionsDelivered(portionsDelivered);
+		}
+		catch (RemoteException e)
+		{ 
+			GenericIO.writelnString ("PortionsDelivered " + portionsDelivered + " remote exception on deliverPortion - setPortionsDelivered: " + e.getMessage ());
+			System.exit (1);
+		}
 		setPortionDelivered(true);
 		notifyAll();
 		// Sleep while waiting for the student to accept the portion
@@ -256,7 +273,17 @@ public class Table implements TableInterface{
 	public synchronized void presentBill() throws RemoteException {
 		// set state of waiter
 		((Waiter) Thread.currentThread()).setWaiterState(WaiterStates.RECPM);
-		reposStub.setWaiterState(((Waiter) Thread.currentThread()).getWaiterID(), WaiterStates.RECPM);
+		// waiter id
+		int waiterID = ((Waiter) Thread.currentThread()).getWaiterID();
+		try
+		{ 
+			reposStub.setWaiterState(waiterID, WaiterStates.RECPM);
+		}
+		catch (RemoteException e)
+		{ 
+			GenericIO.writelnString ("Waiter " + waiterID + " remote exception on presentBill - setWaiterState: " + e.getMessage ());
+			System.exit (1);
+		}
 		billPresented = true;
 		notifyAll();
 		// Sleep while waiting for the student to honor the bill
@@ -294,7 +321,17 @@ public class Table implements TableInterface{
 	public synchronized void getThePad() throws RemoteException {
 		// set state of waiter
 		((Waiter) Thread.currentThread()).setWaiterState(WaiterStates.TKODR);
-		reposStub.setWaiterState(((Waiter) Thread.currentThread()).getWaiterID(), WaiterStates.TKODR);
+		// waiter id
+		int waiterID = ((Waiter) Thread.currentThread()).getWaiterID();
+		try
+		{ 
+			reposStub.setWaiterState(waiterID, WaiterStates.TKODR);
+		}
+		catch (RemoteException e)
+		{ 
+			GenericIO.writelnString ("Waiter " + waiterID + " remote exception on getThePad - setWaiterState: " + e.getMessage ());
+			System.exit (1);
+		}
 		// setting gotThePad flag and wake up the student
 		setGotThePad(true);
 		notifyAll();
@@ -401,7 +438,15 @@ public class Table implements TableInterface{
 		studentID = ((Student) Thread.currentThread()).getStudentID();
 		student[studentID] = ((Student) Thread.currentThread());
 		((Student) Thread.currentThread()).setStudentState(StudentStates.TKSTT);
-		reposStub.setStudentState(studentID, StudentStates.TKSTT);
+		try
+		{ 
+			reposStub.setStudentState(studentID, StudentStates.TKSTT);
+		}
+		catch (RemoteException e)
+		{ 
+			GenericIO.writelnString ("Student " + studentID + " remote exception on takeASeat - setStudentState: " + e.getMessage ());
+			System.exit (1);
+		}
 		// adding student to the sit order FIFO
 		try {
 			seatOrder.write(studentID);
@@ -414,7 +459,15 @@ public class Table implements TableInterface{
 		}
 		// setting the table seat of the student
 		((Student) Thread.currentThread()).setSeat(nStudents);
-		reposStub.setStudentSeat(studentID, nStudents);
+		try
+		{ 
+			reposStub.setStudentSeat(studentID, nStudents);
+		}
+		catch (RemoteException e)
+		{ 
+			GenericIO.writelnString ("StudentSeat " + nStudents + " remote exception on takeASeat - setStudentSeat: " + e.getMessage ());
+			System.exit (1);
+		}
 		nStudents++;
 		// Sleep while waiting for the waiter to salute the student
 		while (!clientSaluted) {
@@ -439,7 +492,15 @@ public class Table implements TableInterface{
 		// set state of student
 		studentID = ((Student) Thread.currentThread()).getStudentID();
 		((Student) Thread.currentThread()).setStudentState(StudentStates.SELCS);
-		reposStub.setStudentState(studentID, StudentStates.SELCS);
+		try
+		{ 
+			reposStub.setStudentState(studentID, StudentStates.SELCS);
+		}
+		catch (RemoteException e)
+		{ 
+			GenericIO.writelnString ("Student " + studentID + " remote exception on selectingCourse - setStudentState: " + e.getMessage ());
+			System.exit (1);
+		}
 		// set menuRead flag and waking up the waiter
 		menuRead = true;
 		notifyAll();
@@ -485,7 +546,15 @@ public class Table implements TableInterface{
 		// set state of student
 		studentID = ((Student) Thread.currentThread()).getStudentID();
 		((Student) Thread.currentThread()).setStudentState(StudentStates.OGODR);
-		reposStub.setStudentState(studentID, StudentStates.OGODR);
+		try
+		{ 
+			reposStub.setStudentState(studentID, StudentStates.OGODR);
+		}
+		catch (RemoteException e)
+		{ 
+			GenericIO.writelnString ("Student " + studentID + " remote exception on organizeOrder - setStudentState: " + e.getMessage ());
+			System.exit (1);
+		}
 		// for each student wait minus himself
 		while (nOrders < SimulPar.S - 1) {
 			// Sleep while waiting for a student to inform him of its request
@@ -545,7 +614,15 @@ public class Table implements TableInterface{
 		// set state of student
 		studentID = ((Student) Thread.currentThread()).getStudentID();
 		((Student) Thread.currentThread()).setStudentState(StudentStates.CHTWC);
-		reposStub.setStudentState(studentID, StudentStates.CHTWC);
+		try
+		{ 
+			reposStub.setStudentState(studentID, StudentStates.CHTWC);
+		}
+		catch (RemoteException e)
+		{ 
+			GenericIO.writelnString ("Student " + studentID + " remote exception on chat - setStudentState: " + e.getMessage ());
+			System.exit (1);
+		}
 		nChatting++;
 		
 		if (lastToEatID == studentID) {
@@ -592,7 +669,15 @@ public class Table implements TableInterface{
 		// set state of student
 		studentID = ((Student) Thread.currentThread()).getStudentID();
 		((Student) Thread.currentThread()).setStudentState(StudentStates.EJYML);
-		reposStub.setStudentState(studentID, StudentStates.EJYML);
+		try
+		{ 
+			reposStub.setStudentState(studentID, StudentStates.EJYML);
+		}
+		catch (RemoteException e)
+		{ 
+			GenericIO.writelnString ("Student " + studentID + " remote exception on enjoyMeal - setStudentState: " + e.getMessage ());
+			System.exit (1);
+		}
 		try {
 			Thread.sleep((long) (1 + 40 * Math.random()));
 		} catch (InterruptedException e) {
@@ -618,7 +703,15 @@ public class Table implements TableInterface{
 		if (eat == SimulPar.S) {
 			lastToEatID = studentID;
 			coursesDelivered++;
-			reposStub.setCoursesDelivered(coursesDelivered);
+			try
+			{ 
+				reposStub.setCoursesDelivered(coursesDelivered);
+			}
+			catch (RemoteException e)
+			{ 
+				GenericIO.writelnString ("CoursesDelivered " + coursesDelivered + " remote exception on lastToEat - setCoursesDelivered: " + e.getMessage ());
+				System.exit (1);
+			}
 			if (coursesDelivered == SimulPar.M) {
 				allFinishedEating = true;
 				noMoreCourses = true;
@@ -627,7 +720,15 @@ public class Table implements TableInterface{
 			}
 			eat = 0;
 			portionsDelivered = 0;
-			reposStub.setPortionsDelivered(portionsDelivered);
+			try
+			{ 
+				reposStub.setPortionsDelivered(portionsDelivered);
+			}
+			catch (RemoteException e)
+			{ 
+				GenericIO.writelnString ("PortionsDelivered " + portionsDelivered + " remote exception on lastToEat - portionsDelivered: " + e.getMessage ());
+				System.exit (1);
+			}
 			allFinishedEating = true;
 			notifyAll();
 			return true;
@@ -664,7 +765,15 @@ public class Table implements TableInterface{
 		// set state of student
 		studentID = ((Student) Thread.currentThread()).getStudentID();
 		((Student) Thread.currentThread()).setStudentState(StudentStates.PYTBL);
-		reposStub.setStudentState(studentID, StudentStates.PYTBL);
+		try
+		{ 
+			reposStub.setStudentState(studentID, StudentStates.PYTBL);
+		}
+		catch (RemoteException e)
+		{ 
+			GenericIO.writelnString ("Student " + studentID + " remote exception on honorTheBill - setStudentState: " + e.getMessage ());
+			System.exit (1);
+		}
 		// sleep while waiting for the waiter to present the bill
 		while (!billPresented) {
 			try {
@@ -691,7 +800,15 @@ public class Table implements TableInterface{
 		// set state of student
 		studentID = ((Student) Thread.currentThread()).getStudentID();
 		((Student) Thread.currentThread()).setStudentState(StudentStates.GGHOM);
-		reposStub.setStudentState(studentID, StudentStates.GGHOM);
+		try
+		{ 
+			reposStub.setStudentState(studentID, StudentStates.GGHOM);
+		}
+		catch (RemoteException e)
+		{ 
+			GenericIO.writelnString ("Student " + studentID + " remote exception on goHome - setStudentState: " + e.getMessage ());
+			System.exit (1);
+		}
 	}
 
 	/**
@@ -707,7 +824,15 @@ public class Table implements TableInterface{
 		// set state of student
 		studentID = ((Student) Thread.currentThread()).getStudentID();
 		((Student) Thread.currentThread()).setStudentState(StudentStates.CHTWC);
-		reposStub.setStudentState(studentID, StudentStates.CHTWC);
+		try
+		{ 
+			reposStub.setStudentState(studentID, StudentStates.CHTWC);
+		}
+		catch (RemoteException e)
+		{ 
+			GenericIO.writelnString ("Student " + studentID + " remote exception on waitForEveryoneToFinish - setStudentState: " + e.getMessage ());
+			System.exit (1);
+		}
 		while (!allFinishedEating) {
 			try {
 				wait();

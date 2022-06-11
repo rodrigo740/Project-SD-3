@@ -358,6 +358,7 @@ public class Bar implements BarInterface {
 	public synchronized void returnToTheBar() throws RemoteException {
 		// set state of waiter
 		((Waiter) Thread.currentThread()).setWaiterState(WaiterStates.APPST);
+		// waiter id
 		int waiterID = ((Waiter) Thread.currentThread()).getWaiterID();
 		try
 		{ 
@@ -382,7 +383,17 @@ public class Bar implements BarInterface {
 		nSaluted++;
 		// set state of waiter
 		((Waiter) Thread.currentThread()).setWaiterState(WaiterStates.APPST);
-		reposStub.setWaiterState(((Waiter) Thread.currentThread()).getWaiterID(), WaiterStates.APPST);
+		// waiter id
+		int waiterID = ((Waiter) Thread.currentThread()).getWaiterID();
+		try
+		{ 
+			reposStub.setWaiterState(waiterID, WaiterStates.APPST);
+		}
+		catch (RemoteException e)
+		{ 
+			GenericIO.writelnString ("Waiter " + waiterID + " remote exception on returnToTheBarAfterSalute - setWaiterState: " + e.getMessage ());
+			System.exit (1);
+		}
 	}
 
 	/**
@@ -398,7 +409,17 @@ public class Bar implements BarInterface {
 		studentCalled = false;
 		// set state of waiter
 		((Waiter) Thread.currentThread()).setWaiterState(WaiterStates.APPST);
-		reposStub.setWaiterState(((Waiter) Thread.currentThread()).getWaiterID(), WaiterStates.APPST);
+		// waiter id
+		int waiterID = ((Waiter) Thread.currentThread()).getWaiterID();
+		try
+		{ 
+			reposStub.setWaiterState(waiterID, WaiterStates.APPST);
+		}
+		catch (RemoteException e)
+		{ 
+			GenericIO.writelnString ("Waiter " + waiterID + " remote exception on returnToTheBarAfterTakingTheOrder - setWaiterState: " + e.getMessage ());
+			System.exit (1);
+		}
 	}
 
 	/**
@@ -414,7 +435,17 @@ public class Bar implements BarInterface {
 		waiterAlerted = false;
 		// set state of waiter
 		((Waiter) Thread.currentThread()).setWaiterState(WaiterStates.APPST);
-		reposStub.setWaiterState(((Waiter) Thread.currentThread()).getWaiterID(), WaiterStates.APPST);
+		// waiter id
+		int waiterID = ((Waiter) Thread.currentThread()).getWaiterID();
+		try
+		{ 
+			reposStub.setWaiterState(waiterID, WaiterStates.APPST);
+		}
+		catch (RemoteException e)
+		{ 
+			GenericIO.writelnString ("Waiter " + waiterID + " remote exception on returnToTheBarAfterPortionsDelivered - setWaiterState: " + e.getMessage ());
+			System.exit (1);
+		}
 	}
 
 	/**
@@ -428,7 +459,17 @@ public class Bar implements BarInterface {
 	public synchronized void prepareBill() throws RemoteException {
 		// set state of waiter
 		((Waiter) Thread.currentThread()).setWaiterState(WaiterStates.PRCBL);
-		reposStub.setWaiterState(((Waiter) Thread.currentThread()).getWaiterID(), WaiterStates.PRCBL);
+		// waiter id
+		int waiterID = ((Waiter) Thread.currentThread()).getWaiterID();
+		try
+		{ 
+			reposStub.setWaiterState(waiterID, WaiterStates.PRCBL);
+		}
+		catch (RemoteException e)
+		{ 
+			GenericIO.writelnString ("Waiter " + waiterID + " remote exception on prepareBill - setWaiterState: " + e.getMessage ());
+			System.exit (1);
+		}
 	}
 
 	/**
@@ -524,7 +565,6 @@ public class Bar implements BarInterface {
 		setActionNeeded(true);
 		setOper('p');
 		notifyAll();
-
 	}
 
 	/**
@@ -540,7 +580,15 @@ public class Bar implements BarInterface {
 		// set state of student
 		studentID = ((Student) Thread.currentThread()).getStudentID();
 		((Student) Thread.currentThread()).setStudentState(StudentStates.GGHOM);
-		reposStub.setStudentState(studentID, StudentStates.GGHOM);
+		try
+		{ 
+			reposStub.setStudentState(studentID, StudentStates.GGHOM);
+		}
+		catch (RemoteException e)
+		{ 
+			GenericIO.writelnString ("Student " + studentID + " remote exception on goHome - setStudentState: " + e.getMessage ());
+			System.exit (1);
+		}
 		// increment number of students that have left the restaurant
 		nLeft++;
 		// set action flag and oper and finally wake up the waiter
