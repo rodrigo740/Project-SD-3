@@ -6,6 +6,7 @@ import clientSide.entities.Chef;
 import clientSide.entities.ChefStates;
 import clientSide.entities.Waiter;
 import clientSide.entities.WaiterStates;
+import genclass.GenericIO;
 import interfaces.GeneralReposInterface;
 import interfaces.KitchenInterface;
 import serverSide.main.ServerKitchen;
@@ -115,7 +116,16 @@ public class Kitchen implements KitchenInterface{
 	public synchronized void handTheNoteToTheChef() throws RemoteException {
 		// set state of waiter
 		((Waiter) Thread.currentThread()).setWaiterState(WaiterStates.PCODR);
-		reposStub.setWaiterState(((Waiter) Thread.currentThread()).getWaiterID(), WaiterStates.PCODR);
+		int waiterID = ((Waiter) Thread.currentThread()).getWaiterID();
+		try
+		{ 
+			reposStub.setWaiterState(waiterID, WaiterStates.PCODR);
+		}
+		catch (RemoteException e)
+		{ 
+			GenericIO.writelnString ("Waiter " + waiterID + " remote exception on handTheNoteToTheChef - setWaiterState: " + e.getMessage ());
+			System.exit (1);
+		}
 		// set orderArrived flag and wake chef
 		setOrderArrived(true);
 		notifyAll();
@@ -133,7 +143,18 @@ public class Kitchen implements KitchenInterface{
 	public synchronized void watchTheNews() throws RemoteException {
 		// set state of chef
 		((Chef) Thread.currentThread()).setChefState(ChefStates.WAFOR);
-		reposStub.setChefState(((Chef) Thread.currentThread()).getChefID(), ChefStates.WAFOR);
+
+		int chefId = ((Chef) Thread.currentThread()).getChefID();
+		try
+		{ 
+			reposStub.setChefState(chefId, ChefStates.WAFOR);
+		}
+		catch (RemoteException e)
+		{ 
+			GenericIO.writelnString ("Chef " + chefId + " remote exception on watchTheNews - setChefState: " + e.getMessage ());
+			System.exit (1);
+		}
+		
 		// Sleep while waiting for order to arrive
 		while (!orderArrived) {
 			try {
@@ -156,7 +177,16 @@ public class Kitchen implements KitchenInterface{
 	public synchronized void startPreparations() throws RemoteException {
 		// set state of chef
 		((Chef) Thread.currentThread()).setChefState(ChefStates.PRPCS);
-		reposStub.setChefState(((Chef) Thread.currentThread()).getChefID(), ChefStates.PRPCS);
+		int chefId = ((Chef) Thread.currentThread()).getChefID();
+		try
+		{ 
+			reposStub.setChefState(chefId, ChefStates.PRPCS);
+		}
+		catch (RemoteException e)
+		{ 
+			GenericIO.writelnString ("Chef " + chefId + " remote exception on startPreparations - setChefState: " + e.getMessage ());
+			System.exit (1);
+		}
 	}
 
 	/**
@@ -170,7 +200,19 @@ public class Kitchen implements KitchenInterface{
 	public synchronized void continuePreparation() throws RemoteException {
 		// set state of chef
 		((Chef) Thread.currentThread()).setChefState(ChefStates.PRPCS);
-		reposStub.setChefState(((Chef) Thread.currentThread()).getChefID(), ChefStates.PRPCS);
+				
+		int chefId = ((Chef) Thread.currentThread()).getChefID();
+		try
+		{ 
+			reposStub.setChefState(chefId, ChefStates.PRPCS);
+		}
+		catch (RemoteException e)
+		{ 
+			GenericIO.writelnString ("Chef " + chefId + " remote exception on continuePreparation - setChefState: " + e.getMessage ());
+			System.exit (1);
+		}
+		
+		
 		// reset delivered portions
 		deliveredPortions = 0;
 	}
@@ -186,7 +228,17 @@ public class Kitchen implements KitchenInterface{
 	public synchronized void proceedToPresentation() throws RemoteException {
 		// set state of chef
 		((Chef) Thread.currentThread()).setChefState(ChefStates.DSHPT);
-		reposStub.setChefState(((Chef) Thread.currentThread()).getChefID(), ChefStates.DSHPT);
+		
+		int chefId = ((Chef) Thread.currentThread()).getChefID();
+		try
+		{ 
+			reposStub.setChefState(chefId, ChefStates.DSHPT);
+		}
+		catch (RemoteException e)
+		{ 
+			GenericIO.writelnString ("Chef " + chefId + " remote exception on proceedToPresentation - setChefState: " + e.getMessage ());
+			System.exit (1);
+		}
 		// set portionReady flag
 		setPortionReady(true);
 	}
@@ -215,7 +267,18 @@ public class Kitchen implements KitchenInterface{
 	public synchronized void deliverPortion() throws RemoteException {
 		// set state of chef
 		((Chef) Thread.currentThread()).setChefState(ChefStates.DLVPT);
-		reposStub.setChefState(((Chef) Thread.currentThread()).getChefID(), ChefStates.DLVPT);
+				
+		int chefId = ((Chef) Thread.currentThread()).getChefID();
+		try
+		{ 
+			reposStub.setChefState(chefId, ChefStates.DLVPT);
+		}
+		catch (RemoteException e)
+		{ 
+			GenericIO.writelnString ("Chef " + chefId + " remote exception on proceedToPresentation - setChefState: " + e.getMessage ());
+			System.exit (1);
+		}
+			
 		// set portionReady flag
 		//setPortionReady(true);
 		//notifyAll();
@@ -243,7 +306,19 @@ public class Kitchen implements KitchenInterface{
 	public synchronized void collectPortion() throws RemoteException {
 		// set state of waiter
 		((Waiter) Thread.currentThread()).setWaiterState(WaiterStates.WTFPT);
-		reposStub.setWaiterState(((Waiter) Thread.currentThread()).getWaiterID(), WaiterStates.WTFPT);
+				
+		int waiterID = ((Waiter) Thread.currentThread()).getWaiterID();
+		try
+		{ 
+			reposStub.setWaiterState(waiterID, WaiterStates.WTFPT);
+		}
+		catch (RemoteException e)
+		{ 
+			GenericIO.writelnString ("Waiter " + waiterID + " remote exception on collectPortion - setWaiterState: " + e.getMessage ());
+			System.exit (1);
+		}
+		
+		
 		// Sleep while waiting for a portion to be ready
 		while (!portionReady) {
 			try {
@@ -269,7 +344,16 @@ public class Kitchen implements KitchenInterface{
 	public synchronized void haveNextPortionReady() throws RemoteException {
 		// set state of chef
 		((Chef) Thread.currentThread()).setChefState(ChefStates.DSHPT);
-		reposStub.setChefState(((Chef) Thread.currentThread()).getChefID(), ChefStates.DSHPT);
+		int chefId = ((Chef) Thread.currentThread()).getChefID();
+		try
+		{ 
+			reposStub.setChefState(chefId, ChefStates.DSHPT);
+		}
+		catch (RemoteException e)
+		{ 
+			GenericIO.writelnString ("Chef " + chefId + " remote exception on haveNextPortionReady - setChefState: " + e.getMessage ());
+			System.exit (1);
+		}
 	}
 
 	/**
@@ -298,7 +382,16 @@ public class Kitchen implements KitchenInterface{
 	public synchronized void cleanUp() throws RemoteException {
 		// set state of chef
 		((Chef) Thread.currentThread()).setChefState(ChefStates.CLSSV);
-		reposStub.setChefState(((Chef) Thread.currentThread()).getChefID(), ChefStates.CLSSV);
+		int chefId = ((Chef) Thread.currentThread()).getChefID();
+		try
+		{ 
+			reposStub.setChefState(chefId, ChefStates.CLSSV);
+		}
+		catch (RemoteException e)
+		{ 
+			GenericIO.writelnString ("Chef " + chefId + " remote exception on cleanUp - setChefState: " + e.getMessage ());
+			System.exit (1);
+		}
 	}
 
 	/**
