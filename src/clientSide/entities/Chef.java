@@ -105,26 +105,13 @@ public class Chef extends Thread {
 			}
 			// Transition to 'DSHPT'
 			proceedToPresentation();
-			BARalertWaiter();
-			/*
-			long v = (long) (1 + 40 * Math.random());
-			try {
-				Thread.sleep(v);
-			} catch (InterruptedException e) {
-			}*/
+			BarAlertWaiter();
 			// Transition to 'DLVPT'
 			deliverPortion();
 			while (!allPortionsDelived()) {
 				// Transition to 'DSHPT'
 				haveNextPortionReady();
 				alertWaiter();
-				/*
-				v = (long) (1 + 40 * Math.random());
-				try {
-					Thread.sleep(v);
-				} catch (InterruptedException e) {
-				}
-				*/
 				// Transition to 'DLVPT'
 				deliverPortion();
 			}
@@ -242,13 +229,13 @@ public class Chef extends Thread {
 	      return ret;
 	}
 
-	private void BARalertWaiter() { //BarStub
+	private void BarAlertWaiter() { //BarStub
 		try
 	      { 
 			barStub.alertWaiter();
 	      }
 	      catch (RemoteException e)
-	      { GenericIO.writelnString ("Chef " + chefID + " remote exception on alertWaiter to the bar: " + e.getMessage ());
+	      { GenericIO.writelnString ("Chef " + chefID + " remote exception on bar alertWaiter to the bar: " + e.getMessage ());
 	        System.exit (1);
 	      }
 	}

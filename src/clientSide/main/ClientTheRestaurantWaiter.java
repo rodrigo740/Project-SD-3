@@ -34,11 +34,10 @@ public class ClientTheRestaurantWaiter {
 		  String rmiRegHostName;                                         // name of the platform where is located the RMI registering service
 	      int rmiRegPortNumb = -1;                                       // port number where the registering service is listening to service requests
 	      String fileName;                                               // name of the logging file
-	      int nIter = -1;                                                // number of iterations of the customer life cycle
 
 	     /* getting problem runtime parameters */
 
-	      if (args.length != 4)
+	      if (args.length != 3)
 	         { GenericIO.writelnString ("Wrong number of parameters!");
 	           System.exit (1);
 	         }
@@ -55,17 +54,6 @@ public class ClientTheRestaurantWaiter {
 	           System.exit (1);
 	         }
 	      fileName = args[2];
-	      try
-	      { nIter = Integer.parseInt (args[3]);
-	      }
-	      catch (NumberFormatException e)
-	      { GenericIO.writelnString ("args[3] is not a number!");
-	        System.exit (1);
-	      }
-	      if (nIter <= 0)
-	         { GenericIO.writelnString ("args[3] is not a positive number!");
-	           System.exit (1);
-	         }
 		
 	      /* problem initialization */
 	      String nameEntryGeneralRepos = "GeneralRepository";            // public name of the general repository object

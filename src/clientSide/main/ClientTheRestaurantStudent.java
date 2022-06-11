@@ -38,18 +38,16 @@ public class ClientTheRestaurantStudent {
 	 * 			  args[0] - name of the platform where is located the RMI registering service
      *        	  args[1] - port number where the registering service is listening to service requests
      *        	  args[2] - name of the logging file
-     *        	  args[3] - number of iterations of the customer life cycle
      */
 	public static void main(String[] args) {
 
 		String rmiRegHostName;                                         // name of the platform where is located the RMI registering service
         int rmiRegPortNumb = -1;                                       // port number where the registering service is listening to service requests
         String fileName;                                               // name of the logging file
-        int nIter = -1;    
 		
         /* getting problem runtime parameters */
 
-      if (args.length != 4)
+      if (args.length != 3)
          { GenericIO.writelnString ("Wrong number of parameters!");
            System.exit (1);
          }
@@ -66,17 +64,6 @@ public class ClientTheRestaurantStudent {
            System.exit (1);
          }
       fileName = args[2];
-      try
-      { nIter = Integer.parseInt (args[3]);
-      }
-      catch (NumberFormatException e)
-      { GenericIO.writelnString ("args[3] is not a number!");
-        System.exit (1);
-      }
-      if (nIter <= 0)
-         { GenericIO.writelnString ("args[3] is not a positive number!");
-           System.exit (1);
-         }
 		
       /* problem initialization */
       String nameEntryGeneralRepos = "GeneralRepository";            // public name of the general repository object
@@ -86,7 +73,7 @@ public class ClientTheRestaurantStudent {
       TableInterface tableStub = null; 								 // remote reference to the table
       BarInterface barStub = null;                          		 // remote reference to the bar object
       Registry registry = null;                                      // remote reference for registration in the RMI registry service
-      Student[] student = new Student[SimulPar.S]; // array of chef threads
+      Student[] student = new Student[SimulPar.S]; // array of student threads
 
 
       try

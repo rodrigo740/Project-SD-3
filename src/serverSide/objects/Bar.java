@@ -358,7 +358,16 @@ public class Bar implements BarInterface {
 	public synchronized void returnToTheBar() throws RemoteException {
 		// set state of waiter
 		((Waiter) Thread.currentThread()).setWaiterState(WaiterStates.APPST);
-		reposStub.setWaiterState(((Waiter) Thread.currentThread()).getWaiterID(), WaiterStates.APPST);
+		int waiterID = ((Waiter) Thread.currentThread()).getWaiterID();
+		try
+		{ 
+			reposStub.setWaiterState(waiterID, WaiterStates.APPST);
+		}
+		catch (RemoteException e)
+		{ 
+			GenericIO.writelnString ("Waiter " + waiterID + " remote exception on returnToTheBar - setWaiterState: " + e.getMessage ());
+			System.exit (1);
+		}
 	}
 
 	/**
