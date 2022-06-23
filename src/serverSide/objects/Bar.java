@@ -355,11 +355,11 @@ public class Bar implements BarInterface {
 	 * 
 	 */
 	@Override
-	public synchronized void returnToTheBar() throws RemoteException {
+	public synchronized int returnToTheBar(int waiterID) throws RemoteException {
 		// set state of waiter
-		((Waiter) Thread.currentThread()).setWaiterState(WaiterStates.APPST);
+		//((Waiter) Thread.currentThread()).setWaiterState(WaiterStates.APPST);
 		// waiter id
-		int waiterID = ((Waiter) Thread.currentThread()).getWaiterID();
+		//int waiterID = ((Waiter) Thread.currentThread()).getWaiterID();
 		try
 		{ 
 			reposStub.setWaiterState(waiterID, WaiterStates.APPST);
@@ -369,6 +369,7 @@ public class Bar implements BarInterface {
 			GenericIO.writelnString ("Waiter " + waiterID + " remote exception on returnToTheBar - setWaiterState: " + e.getMessage ());
 			System.exit (1);
 		}
+		return WaiterStates.APPST;
 	}
 
 	/**
@@ -379,12 +380,12 @@ public class Bar implements BarInterface {
 	 * 
 	 */
 	@Override
-	public synchronized void returnToTheBarAfterSalute() throws RemoteException {
+	public synchronized int returnToTheBarAfterSalute(int waiterID) throws RemoteException {
 		nSaluted++;
 		// set state of waiter
-		((Waiter) Thread.currentThread()).setWaiterState(WaiterStates.APPST);
+		//((Waiter) Thread.currentThread()).setWaiterState(WaiterStates.APPST);
 		// waiter id
-		int waiterID = ((Waiter) Thread.currentThread()).getWaiterID();
+		//int waiterID = ((Waiter) Thread.currentThread()).getWaiterID();
 		try
 		{ 
 			reposStub.setWaiterState(waiterID, WaiterStates.APPST);
@@ -394,6 +395,7 @@ public class Bar implements BarInterface {
 			GenericIO.writelnString ("Waiter " + waiterID + " remote exception on returnToTheBarAfterSalute - setWaiterState: " + e.getMessage ());
 			System.exit (1);
 		}
+		return  WaiterStates.APPST;
 	}
 
 	/**
@@ -408,9 +410,9 @@ public class Bar implements BarInterface {
 		// reset student called flag
 		studentCalled = false;
 		// set state of waiter
-		((Waiter) Thread.currentThread()).setWaiterState(WaiterStates.APPST);
+		//((Waiter) Thread.currentThread()).setWaiterState(WaiterStates.APPST);
 		// waiter id
-		int waiterID = ((Waiter) Thread.currentThread()).getWaiterID();
+		//int waiterID = ((Waiter) Thread.currentThread()).getWaiterID();
 		try
 		{ 
 			reposStub.setWaiterState(waiterID, WaiterStates.APPST);

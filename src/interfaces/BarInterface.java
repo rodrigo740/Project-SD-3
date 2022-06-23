@@ -17,12 +17,12 @@ public interface BarInterface extends Remote{
 	public void goHome() throws RemoteException;//student
 	
 	public char lookAround() throws RemoteException; //waiter
-	public void returnToTheBarAfterSalute() throws RemoteException;//waiter
+	public int returnToTheBarAfterSalute(int waiterID) throws RemoteException;//waiter
 	public void returnToTheBarAfterTakingTheOrder() throws RemoteException;//waiter
 	public void returnToTheBarAfterPortionsDelivered() throws RemoteException;//waiter
 	public void prepareBill() throws RemoteException;//waiter
 	public void receivedPayment() throws RemoteException;//waiter
-	public void returnToTheBar() throws RemoteException;//waiter
+	public int returnToTheBar(int waiterID) throws RemoteException;//waiter
 	public void sayGoodbye() throws RemoteException;//waiter
 	
   /**

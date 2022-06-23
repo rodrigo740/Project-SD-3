@@ -180,18 +180,21 @@ public class Waiter extends Thread {
 	      { GenericIO.writelnString ("Waiter " + waiterID + " remote exception on lookAround: " + e.getMessage ());
 	        System.exit (1);
 	      }
+		waiterState = ret;
 		return ret;
 	}
 	
 	private void returnToTheBarAfterSalute() { //barStub
+		int ret =-1;
 		try
 	      { 
-			 barStub.returnToTheBarAfterSalute();
+			 ret = barStub.returnToTheBarAfterSalute(waiterID);
 	      }
 	      catch (RemoteException e)
 	      { GenericIO.writelnString ("Waiter " + waiterID + " remote exception on returnToTheBarAfterSalute: " + e.getMessage ());
 	        System.exit (1);
 	      }
+		 waiterState = ret;
 	}
 	
 	private void returnToTheBarAfterTakingTheOrder() { //barStub
@@ -239,14 +242,16 @@ public class Waiter extends Thread {
 	}
 	
 	private void returnToTheBar() { //barStub
+		int ret = -1;
 		try
 	      { 
-			 barStub.returnToTheBar();
+			ret = barStub.returnToTheBar(waiterID);
 	      }
 	      catch (RemoteException e)
 	      { GenericIO.writelnString ("Waiter " + waiterID + " remote exception on returnToTheBar: " + e.getMessage ());
 	        System.exit (1);
 	      }
+		waiterState = ret;
 	}
 	
 	
