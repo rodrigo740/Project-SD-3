@@ -306,14 +306,16 @@ public class Waiter extends Thread {
 	      }
 	}
 	private void TablepresentBill() { //tblStub
+		int ret = -1;
 		try
 	      { 
-			 tblStub.presentBill();
+			 ret = tblStub.presentBill(waiterID);
 	      }
 	      catch (RemoteException e)
 	      { GenericIO.writelnString ("Waiter " + waiterID + " remote exception on presentBill: " + e.getMessage ());
 	        System.exit (1);
 	      }
+		waiterState = ret;
 	}
 	private boolean haveAllPortionsBeenServed() { //tblStub
 		 boolean ret = false;   // return value

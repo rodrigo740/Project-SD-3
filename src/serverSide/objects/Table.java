@@ -271,11 +271,11 @@ public class Table implements TableInterface{
 	 * @throws RemoteException 
 	 * 
 	 */
-	public synchronized void presentBill() throws RemoteException {
+	public synchronized int presentBill(int waiterID) throws RemoteException {
 		// set state of waiter
-		((Waiter) Thread.currentThread()).setWaiterState(WaiterStates.RECPM);
+		//((Waiter) Thread.currentThread()).setWaiterState(WaiterStates.RECPM);
 		// waiter id
-		int waiterID = ((Waiter) Thread.currentThread()).getWaiterID();
+		//int waiterID = ((Waiter) Thread.currentThread()).getWaiterID();
 		try
 		{ 
 			reposStub.setWaiterState(waiterID, WaiterStates.RECPM);
@@ -296,6 +296,7 @@ public class Table implements TableInterface{
 		}
 		// reset billHonored flag
 		setBillHonored(false);
+		return WaiterStates.RECPM;
 	}
 
 	/**

@@ -25,7 +25,7 @@ public interface TableInterface extends Remote{
 	public int saluteTheClient(int waiterID)throws RemoteException; //table
 	public void getThePad() throws RemoteException; //table
 	public void deliverPortion() throws RemoteException; //table  
-	public void presentBill() throws RemoteException; //table
+	public int presentBill(int waiterID) throws RemoteException; //table
 	public boolean haveAllPortionsBeenServed() throws RemoteException; //table
 	
   /**
