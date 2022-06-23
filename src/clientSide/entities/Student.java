@@ -228,14 +228,16 @@ public class Student extends Thread {
 	}
 	
 	private void goHome() { //barStub
+		int ret = -1;
 		try
 	      { 
-			 barStub.goHome();
+			 ret = barStub.goHome(studentID);
 	      }
 	      catch (RemoteException e)
 	      { GenericIO.writelnString ("Student " + studentID + " remote exception on goHome: " + e.getMessage ());
 	        System.exit (1);
 	      }
+		studentState = ret;
 	}
 	
 	private void takeASeat() { //tblStub

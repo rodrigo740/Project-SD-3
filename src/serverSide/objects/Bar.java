@@ -137,7 +137,7 @@ public class Bar implements BarInterface {
 	 * @return oper operation to be performed
 	 */
 	@Override
-	public synchronized char lookAround() throws RemoteException{
+	public synchronized char lookAround(int waiterID) throws RemoteException{
 		// if everyone left end
 		if (nLeft == SimulPar.S) {
 			setOper('e');
@@ -190,22 +190,22 @@ public class Bar implements BarInterface {
 
 		// Sleep while waiting for something to happen
 		while (!actionNeeded) {
-			waiter[((Waiter) Thread.currentThread()).getWaiterID()] = (Waiter) Thread.currentThread();
+			waiter[waiterID] = Thread.currentThread();
 			try {
 				wait();
 			} catch (InterruptedException e) {
-				waiter[((Waiter) Thread.currentThread()).getWaiterID()] = null;
+				waiter[waiterID] = null;
 				return 'e';
 			}
 		}
 		if (oper == 'p') {
 			// Sleep while waiting for the student to signal it needs the next course
 			while (!bringNextCourse) {
-				waiter[((Waiter) Thread.currentThread()).getWaiterID()] = (Waiter) Thread.currentThread();
+				waiter[waiterID] = Thread.currentThread();
 				try {
 					wait();
 				} catch (InterruptedException e) {
-					waiter[((Waiter) Thread.currentThread()).getWaiterID()] = null;
+					waiter[waiterID] = null;
 					return 'e';
 				}
 			}
@@ -406,7 +406,7 @@ public class Bar implements BarInterface {
 	 * 
 	 */
 	@Override
-	public synchronized void returnToTheBarAfterTakingTheOrder() throws RemoteException {
+	public synchronized int returnToTheBarAfterTakingTheOrder(int waiterID) throws RemoteException {
 		// reset student called flag
 		studentCalled = false;
 		// set state of waiter
@@ -422,6 +422,8 @@ public class Bar implements BarInterface {
 			GenericIO.writelnString ("Waiter " + waiterID + " remote exception on returnToTheBarAfterTakingTheOrder - setWaiterState: " + e.getMessage ());
 			System.exit (1);
 		}
+		
+		return WaiterStates.APPST;
 	}
 
 	/**
@@ -433,12 +435,12 @@ public class Bar implements BarInterface {
 	 * 
 	 */
 	@Override
-	public synchronized void returnToTheBarAfterPortionsDelivered() throws RemoteException {
+	public synchronized int returnToTheBarAfterPortionsDelivered(int waiterID) throws RemoteException {
 		waiterAlerted = false;
 		// set state of waiter
-		((Waiter) Thread.currentThread()).setWaiterState(WaiterStates.APPST);
+		//((Waiter) Thread.currentThread()).setWaiterState(WaiterStates.APPST);
 		// waiter id
-		int waiterID = ((Waiter) Thread.currentThread()).getWaiterID();
+		//int waiterID = ((Waiter) Thread.currentThread()).getWaiterID();
 		try
 		{ 
 			reposStub.setWaiterState(waiterID, WaiterStates.APPST);
@@ -448,6 +450,7 @@ public class Bar implements BarInterface {
 			GenericIO.writelnString ("Waiter " + waiterID + " remote exception on returnToTheBarAfterPortionsDelivered - setWaiterState: " + e.getMessage ());
 			System.exit (1);
 		}
+		return WaiterStates.APPST;
 	}
 
 	/**
@@ -458,11 +461,11 @@ public class Bar implements BarInterface {
 	 * 
 	 */
 	@Override
-	public synchronized void prepareBill() throws RemoteException {
+	public synchronized int prepareBill(int waiterID) throws RemoteException {
 		// set state of waiter
-		((Waiter) Thread.currentThread()).setWaiterState(WaiterStates.PRCBL);
+		//((Waiter) Thread.currentThread()).setWaiterState(WaiterStates.PRCBL);
 		// waiter id
-		int waiterID = ((Waiter) Thread.currentThread()).getWaiterID();
+		//int waiterID = ((Waiter) Thread.currentThread()).getWaiterID();
 		try
 		{ 
 			reposStub.setWaiterState(waiterID, WaiterStates.PRCBL);
@@ -472,6 +475,7 @@ public class Bar implements BarInterface {
 			GenericIO.writelnString ("Waiter " + waiterID + " remote exception on prepareBill - setWaiterState: " + e.getMessage ());
 			System.exit (1);
 		}
+		return WaiterStates.PRCBL;
 	}
 
 	/**
@@ -577,11 +581,11 @@ public class Bar implements BarInterface {
 	 * 
 	 */
 	@Override
-	public synchronized void goHome() throws RemoteException {
-		int studentID;
+	public synchronized int goHome(int studentID) throws RemoteException {
+		//int studentID;
 		// set state of student
-		studentID = ((Student) Thread.currentThread()).getStudentID();
-		((Student) Thread.currentThread()).setStudentState(StudentStates.GGHOM);
+		//studentID = ((Student) Thread.currentThread()).getStudentID();
+		//((Student) Thread.currentThread()).setStudentState(StudentStates.GGHOM);
 		try
 		{ 
 			reposStub.setStudentState(studentID, StudentStates.GGHOM);
@@ -597,6 +601,7 @@ public class Bar implements BarInterface {
 		setActionNeeded(true);
 		setOper('g');
 		notifyAll();
+		return StudentStates.GGHOM;
 	}
 
 	/**
