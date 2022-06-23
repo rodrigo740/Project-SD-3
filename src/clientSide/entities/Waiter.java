@@ -332,25 +332,29 @@ public class Waiter extends Thread {
 	
 
 	private void handTheNoteToTheChef() { //kitStub
+		int ret = -1;
 		try
 	      { 
-			 kitStub.handTheNoteToTheChef();
+			 ret = kitStub.handTheNoteToTheChef(waiterID);
 	      }
 	      catch (RemoteException e)
 	      { GenericIO.writelnString ("Waiter " + waiterID + " remote exception on handTheNoteToTheChef: " + e.getMessage ());
 	        System.exit (1);
 	      }
+		waiterState = ret;
 	}
 	
 	private void collectPortion() { //kitStub
+		int ret = -1;
 		try
 	      { 
-			 kitStub.collectPortion();
+			 ret = kitStub.collectPortion(waiterID);
 	      }
 	      catch (RemoteException e)
 	      { GenericIO.writelnString ("Waiter " + waiterID + " remote exception on collectPortion: " + e.getMessage ());
 	        System.exit (1);
 	      }
+		waiterState = ret;
 	}
 }
 
