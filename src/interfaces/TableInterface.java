@@ -9,7 +9,7 @@ import java.rmi.*;
 
 public interface TableInterface extends Remote{
 
-	public void takeASeat() throws RemoteException; //student
+	public int takeASeat(int studentID) throws RemoteException; //student
 	public void selectingCourse() throws RemoteException; //student
 	public void organizeOrder() throws RemoteException; //student
 	public void informCompanions() throws RemoteException; //student
@@ -23,7 +23,7 @@ public interface TableInterface extends Remote{
 	public boolean lastToEnterRestaurant() throws RemoteException; //student
 	
 	public int saluteTheClient(int waiterID)throws RemoteException; //table
-	public void getThePad() throws RemoteException; //table
+	public int getThePad(int waiterID) throws RemoteException; //table
 	public void deliverPortion() throws RemoteException; //table  
 	public int presentBill(int waiterID) throws RemoteException; //table
 	public boolean haveAllPortionsBeenServed() throws RemoteException; //table

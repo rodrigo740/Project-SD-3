@@ -320,11 +320,11 @@ public class Table implements TableInterface{
 	 * 
 	 */
 
-	public synchronized void getThePad() throws RemoteException {
+	public synchronized int getThePad(int waiterID) throws RemoteException {
 		// set state of waiter
-		((Waiter) Thread.currentThread()).setWaiterState(WaiterStates.TKODR);
+		//((Waiter) Thread.currentThread()).setWaiterState(WaiterStates.TKODR);
 		// waiter id
-		int waiterID = ((Waiter) Thread.currentThread()).getWaiterID();
+		//int waiterID = ((Waiter) Thread.currentThread()).getWaiterID();
 		try
 		{ 
 			reposStub.setWaiterState(waiterID, WaiterStates.TKODR);
@@ -346,6 +346,7 @@ public class Table implements TableInterface{
 		}
 		// reset orderDescribed flag
 		setOrderDescribed(false);
+		return WaiterStates.TKODR;
 	}
 
 	/**
@@ -434,12 +435,12 @@ public class Table implements TableInterface{
 	 * @throws RemoteException 
 	 * 
 	 */
-	public synchronized void takeASeat() throws RemoteException {
-		int studentID;
+	public synchronized int takeASeat(int studentID) throws RemoteException {
+		//int studentID;
 		// set state of student
-		studentID = ((Student) Thread.currentThread()).getStudentID();
-		student[studentID] = ((Student) Thread.currentThread());
-		((Student) Thread.currentThread()).setStudentState(StudentStates.TKSTT);
+		//studentID = ((Student) Thread.currentThread()).getStudentID();
+		student[studentID] = Thread.currentThread();
+		//((Student) Thread.currentThread()).setStudentState(StudentStates.TKSTT);
 		try
 		{ 
 			reposStub.setStudentState(studentID, StudentStates.TKSTT);
@@ -460,6 +461,7 @@ public class Table implements TableInterface{
 			first = studentID;
 		}
 		// setting the table seat of the student
+		// TODO
 		((Student) Thread.currentThread()).setSeat(nStudents);
 		try
 		{ 
@@ -480,6 +482,7 @@ public class Table implements TableInterface{
 		}
 		// reset clientSaluted flag
 		setClientSaluted(false);
+		return StudentStates.TKSTT;
 	}
 
 	/**

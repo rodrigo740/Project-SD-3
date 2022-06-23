@@ -286,14 +286,16 @@ public class Waiter extends Thread {
 		waiterState = ret;
 	}
 	private void getThePad() { //tblStub
+		int ret = -1;
 		try
 	      { 
-			 tblStub.getThePad();
+			 ret = tblStub.getThePad(waiterID);
 	      }
 	      catch (RemoteException e)
 	      { GenericIO.writelnString ("Waiter " + waiterID + " remote exception on getThePad: " + e.getMessage ());
 	        System.exit (1);
 	      }
+		waiterState = ret;
 	}
 	private void deliverPortion() { //tblStub
 		try

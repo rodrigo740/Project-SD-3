@@ -241,14 +241,16 @@ public class Student extends Thread {
 	}
 	
 	private void takeASeat() { //tblStub
+		int ret = -1;
 		try
 	      { 
-			tblStub.takeASeat();
+			ret = tblStub.takeASeat(studentID);
 	      }
 	      catch (RemoteException e)
 	      { GenericIO.writelnString ("Student " + studentID + " remote exception on takeASeat: " + e.getMessage ());
 	        System.exit (1);
 	      }
+		studentState = ret;
 	}
 	
 	private void selectingCourse() { //tblStub
