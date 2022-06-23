@@ -274,14 +274,16 @@ public class Waiter extends Thread {
 	
 	
 	private void saluteTheClient() { //tblStub
+		int ret = -1;
 		try
 	      { 
-			 tblStub.saluteTheClient();
+			 tblStub.saluteTheClient(waiterID);
 	      }
 	      catch (RemoteException e)
 	      { GenericIO.writelnString ("Waiter " + waiterID + " remote exception on saluteTheClient: " + e.getMessage ());
 	        System.exit (1);
 	      }
+		waiterState = ret;
 	}
 	private void getThePad() { //tblStub
 		try

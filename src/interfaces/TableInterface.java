@@ -22,7 +22,7 @@ public interface TableInterface extends Remote{
 	public boolean firstToEnter() throws RemoteException; //student
 	public boolean lastToEnterRestaurant() throws RemoteException; //student
 	
-	public void saluteTheClient()throws RemoteException; //table
+	public int saluteTheClient(int waiterID)throws RemoteException; //table
 	public void getThePad() throws RemoteException; //table
 	public void deliverPortion() throws RemoteException; //table  
 	public void presentBill() throws RemoteException; //table
