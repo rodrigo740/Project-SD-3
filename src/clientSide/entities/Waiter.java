@@ -174,7 +174,7 @@ public class Waiter extends Thread {
 		char ret = ' ';
 		try
 	      { 
-			 ret = barStub.lookAround();
+			 ret = barStub.lookAround(waiterID);
 	      }
 	      catch (RemoteException e)
 	      { GenericIO.writelnString ("Waiter " + waiterID + " remote exception on lookAround: " + e.getMessage ());
@@ -185,7 +185,7 @@ public class Waiter extends Thread {
 	}
 	
 	private void returnToTheBarAfterSalute() { //barStub
-		int ret =-1;
+		int ret = -1;
 		try
 	      { 
 			 ret = barStub.returnToTheBarAfterSalute(waiterID);
@@ -198,36 +198,42 @@ public class Waiter extends Thread {
 	}
 	
 	private void returnToTheBarAfterTakingTheOrder() { //barStub
+		int ret = -1;
 		try
 	      { 
-			 barStub.returnToTheBarAfterTakingTheOrder();
+			 ret = barStub.returnToTheBarAfterTakingTheOrder(waiterID);
 	      }
 	      catch (RemoteException e)
 	      { GenericIO.writelnString ("Waiter " + waiterID + " remote exception on returnToTheBarAfterTakingTheOrder: " + e.getMessage ());
 	        System.exit (1);
 	      }
+		waiterState = ret;
 	}
 	
 	private void returnToTheBarAfterPortionsDelivered() { //barStub
+		int ret = -1;
 		try
 	      { 
-			 barStub.returnToTheBarAfterPortionsDelivered();
+			 ret = barStub.returnToTheBarAfterPortionsDelivered(waiterID);
 	      }
 	      catch (RemoteException e)
 	      { GenericIO.writelnString ("Waiter " + waiterID + " remote exception on returnToTheBarAfterPortionsDelivered: " + e.getMessage ());
 	        System.exit (1);
 	      }
+		waiterState = ret;
 	}
 	
 	private void prepareBill() { //barStub
+		int ret = -1;
 		try
 	      { 
-			 barStub.prepareBill();
+			 ret = barStub.prepareBill(waiterID);
 	      }
 	      catch (RemoteException e)
 	      { GenericIO.writelnString ("Waiter " + waiterID + " remote exception on prepareBill: " + e.getMessage ());
 	        System.exit (1);
 	      }
+		waiterState = ret;
 	}
 	
 	private void receivedPayment() { //barStub
