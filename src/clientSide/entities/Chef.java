@@ -10,9 +10,9 @@ import genclass.GenericIO;
 /**
  * Chef thread.
  *
- * Used to simulate the Chef life cycle.
- * Implementation of a client-server model of type 2 (server replication).
- * Communication is based on a communication channel under the TCP protocol.
+ *		It simulates the barber life cycle.
+ *      Implementation of a client-server model of type 2 (server replication).
+ *      Communication is based on remote calls under Java RMI.
  */
 public class Chef extends Thread {
 	/**
@@ -38,8 +38,8 @@ public class Chef extends Thread {
 	 * @param name      thread name
 	 * @param chefID    ID of the chef
 	 * @param chefState state of the chef
-	 * @param barStub       reference of the BarStub
-	 * @param kitStub       reference of the KitchenStub
+	 * @param barStub       remote reference to the bar
+	 * @param kitStub       remote reference to the kitchen
 	 */
 	public Chef(String name, int chefID, int chefState, BarInterface barStub, KitchenInterface kitStub) {
 		super(name);
@@ -120,7 +120,15 @@ public class Chef extends Thread {
 		cleanUp();
 	}
 
-	private void watchTheNews() { //kitStub
+	
+	/**
+	 * Operation watch the news.
+	 *
+	 * It is called by a chef while waiting for and order to be delivered by the
+	 * waiter.
+	 *
+	 */
+	private void watchTheNews() {
 		int ret=-1;
 		 try
 	      { 
@@ -133,7 +141,13 @@ public class Chef extends Thread {
 		 chefState=ret;
 	}
 	
-	private void startPreparations() { //kitStub
+	/**
+	 * Operation start preparations.
+	 *
+	 * It is called by a chef after receiving and order
+	 *
+	 */
+	private void startPreparations() { 
 		int ret = -1;
 		try
 	      { 
@@ -145,7 +159,14 @@ public class Chef extends Thread {
 	      }
 		chefState=ret;
 	}
-	private void continuePreparation() { //kitStub
+	
+	/**
+	 * Operation continue preparations.
+	 *
+	 * It is called by a chef after the chef delivered a portion
+	 *
+	 */
+	private void continuePreparation() { 
 		int ret = -1;
 		try
 	      { 
@@ -158,7 +179,13 @@ public class Chef extends Thread {
 		chefState=ret;
 	}
 	
-	private void proceedToPresentation() { //kitStub
+	/**
+	 * Operation proceed to presentation.
+	 *
+	 * It is called by a chef after preparing a portion
+	 *
+	 */
+	private void proceedToPresentation() { 
 		int ret=-1;
 		try
 	      { 
@@ -170,7 +197,14 @@ public class Chef extends Thread {
 	      }
 		chefState=ret;
 	}
-	private void deliverPortion() { //kitStub
+	
+	/**
+	 * Operation deliver portion.
+	 *
+	 * It is called by a chef to deliver a portion to the waiter
+	 *
+	 */
+	private void deliverPortion() {
 		int ret=-1;
 		try
 	      { 
@@ -183,7 +217,13 @@ public class Chef extends Thread {
 		chefState=ret;
 	}
 	
-	private void haveNextPortionReady() { //kitStub
+	/**
+	 * Operation have next portion ready.
+	 *
+	 * It is called by a chef in order to start dishing another portion
+	 *
+	 */
+	private void haveNextPortionReady() { 
 		int ret = -1;
 		try
 	      { 
@@ -195,7 +235,14 @@ public class Chef extends Thread {
 	      }
 		chefState=ret;
 	}
-	private void alertWaiter() { //kitStub
+	/**
+	 * Operation alert waiter
+	 *
+	 * It is called by a chef to warn the waiter that a portion is ready to be
+	 * collected
+	 *
+	 */
+	private void alertWaiter() { 
 		try
 	      { 
 			 kitStub.alertWaiter();
@@ -206,7 +253,13 @@ public class Chef extends Thread {
 	      }
 	}
 	
-	private void cleanUp() { //kitStub
+	/**
+	 * Operation clean up.
+	 *
+	 * It is called by a chef to finish its service
+	 *
+	 */
+	private void cleanUp() { 
 		int ret=-1;
 		try
 	      { 
@@ -218,7 +271,16 @@ public class Chef extends Thread {
 	      }
 		chefState=ret;
 	}
-	private boolean orderBeenCompleted() { //kitStub
+	
+	/**
+	 * Operation order been completed.
+	 *
+	 * It is called by a chef in order to know if the order has been completed
+	 *
+	 * @return true if  order has been completed - 
+	 * 		   false, otherwise  
+	 */
+	private boolean orderBeenCompleted() { 
 		 boolean ret = false;   // return value
 
 	      try
@@ -230,7 +292,16 @@ public class Chef extends Thread {
 	      }
 	      return ret;
 	}
-	private boolean allPortionsDelived() { //kitStub
+	
+	/**
+	 * Operation all portions delivered.
+	 *
+	 * It is called by a chef to know if all portion have been delivered
+	 *
+	 * @return true if have all portions delivered - 
+	 * 		   false, otherwise 
+	 */
+	private boolean allPortionsDelived() {
 		  boolean ret = false;   // return value
 
 	      try
@@ -243,7 +314,14 @@ public class Chef extends Thread {
 	      return ret;
 	}
 
-	private void BarAlertWaiter() { //BarStub
+	/**
+	 * Operation alert waiter
+	 *
+	 * It is called by a chef to warn the waiter that a portions is ready to be
+	 * delivered
+	 * 
+	 */
+	private void BarAlertWaiter() {
 		try
 	      { 
 			barStub.alertWaiter();

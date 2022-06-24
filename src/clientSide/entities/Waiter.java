@@ -7,9 +7,9 @@ import genclass.GenericIO;
 /**
  * Waiter thread.
  *
- * Used to simulate the Waiter life cycle.
- * Implementation of a client-server model of type 2 (server replication).
- * Communication is based on a communication channel under the TCP protocol.
+ *	It simulates the barber life cycle.
+ *  Implementation of a client-server model of type 2 (server replication).
+ *  Communication is based on remote calls under Java RMI.
  */
 
 public class Waiter extends Thread {
@@ -50,9 +50,9 @@ public class Waiter extends Thread {
 	 * @param name        thread name
 	 * @param waiterID    id of the waiter
 	 * @param waiterState state of the waiter
-	 * @param barStub         reference to the bar
-	 * @param kitStub         reference to the kitchen
-	 * @param tblStub         reference to the table
+	 * @param barStub         remote reference to the bar
+	 * @param kitStub         remote reference to the kitchen
+	 * @param tblStub         remote reference to the table
 	 */
 	public Waiter(String name, int waiterID, int waiterState, BarInterface barStub, KitchenInterface kitStub, TableInterface tblStub) {
 		super(name);
@@ -170,7 +170,14 @@ public class Waiter extends Thread {
 		}
 	}
 	
-	private char lookAround() { //barStub
+	/**
+	 * Operation look around
+	 *
+	 * It is called by a waiter to look around
+	 * 
+	 * @return ret operation to be performed
+	 */
+	private char lookAround() {
 		char ret = ' ';
 		try
 	      { 
@@ -184,7 +191,13 @@ public class Waiter extends Thread {
 		return ret;
 	}
 	
-	private void returnToTheBarAfterSalute() { //barStub
+	/**
+	 * Operation return to the bar after salute
+	 *
+	 * It is called by a waiter to return to the bar after saluting the student
+	 * 
+	 */
+	private void returnToTheBarAfterSalute() {
 		int ret = -1;
 		try
 	      { 
@@ -197,7 +210,13 @@ public class Waiter extends Thread {
 		 waiterState = ret;
 	}
 	
-	private void returnToTheBarAfterTakingTheOrder() { //barStub
+	/**
+	 * Operation return to the bar after taking the order
+	 *
+	 * It is called by a waiter to return to the bar after taking the order
+	 * 
+	 */
+	private void returnToTheBarAfterTakingTheOrder() {
 		int ret = -1;
 		try
 	      { 
@@ -210,7 +229,14 @@ public class Waiter extends Thread {
 		waiterState = ret;
 	}
 	
-	private void returnToTheBarAfterPortionsDelivered() { //barStub
+	/**
+	 * Operation return to the bar after portions delivered
+	 *
+	 * It is called by a waiter to the bar after all portions of a course have been
+	 * delivered
+	 * 
+	 */
+	private void returnToTheBarAfterPortionsDelivered() {
 		int ret = -1;
 		try
 	      { 
@@ -223,7 +249,13 @@ public class Waiter extends Thread {
 		waiterState = ret;
 	}
 	
-	private void prepareBill() { //barStub
+	/**
+	 * Operation prepare the bill
+	 *
+	 * It is called by a waiter to prepare the bill
+	 * 
+	 */
+	private void prepareBill() {
 		int ret = -1;
 		try
 	      { 
@@ -236,7 +268,13 @@ public class Waiter extends Thread {
 		waiterState = ret;
 	}
 	
-	private void receivedPayment() { //barStub
+	/**
+	 * Operation received payment
+	 *
+	 * It is called by a waiter after the payment has been received
+	 * 
+	 */
+	private void receivedPayment() {
 		try
 	      { 
 			 barStub.receivedPayment();
@@ -247,7 +285,13 @@ public class Waiter extends Thread {
 	      }
 	}
 	
-	private void returnToTheBar() { //barStub
+	/**
+	 * Operation return to the bar
+	 *
+	 * It is called by a waiter to return to the bar
+	 * 
+	 */
+	private void returnToTheBar() {
 		int ret = -1;
 		try
 	      { 
@@ -260,8 +304,13 @@ public class Waiter extends Thread {
 		waiterState = ret;
 	}
 	
-	
-	private void sayGoodbye() { //barStub
+	/**
+	 * Operation say goodbye
+	 *
+	 * It is called by a waiter to say goodbye to the student
+	 * 
+	 */
+	private void sayGoodbye() {
 		try
 	      { 
 			 barStub.sayGoodbye();
@@ -272,8 +321,13 @@ public class Waiter extends Thread {
 	      }
 	}
 	
-	
-	private void saluteTheClient() { //tblStub
+	/**
+	 * Operation salute the client.
+	 *
+	 * It is called by a waiter to salute the client
+	 * 
+	 */
+	private void saluteTheClient() {
 		int ret = -1;
 		try
 	      { 
@@ -285,7 +339,15 @@ public class Waiter extends Thread {
 	      }
 		waiterState = ret;
 	}
-	private void getThePad() { //tblStub
+	
+	
+	/**
+	 * Operation get the pad
+	 *
+	 * It is called by a waiter to get the pad
+	 * 
+	 */
+	private void getThePad() {
 		int ret = -1;
 		try
 	      { 
@@ -297,7 +359,14 @@ public class Waiter extends Thread {
 	      }
 		waiterState = ret;
 	}
-	private void deliverPortion() { //tblStub
+	
+	/**
+	 * Operation deliver portion.
+	 *
+	 * It is called by a waiter to deliver a portion to a student
+	 * 
+	 */
+	private void deliverPortion() {
 		try
 	      { 
 			 tblStub.deliverPortion();
@@ -307,7 +376,14 @@ public class Waiter extends Thread {
 	        System.exit (1);
 	      }
 	}
-	private void TablepresentBill() { //tblStub
+	
+	/**
+	 * Operation present the bill.
+	 *
+	 * It is called by a waiter to present the bill to the student
+	 * 
+	 */
+	private void TablepresentBill() {
 		int ret = -1;
 		try
 	      { 
@@ -319,7 +395,17 @@ public class Waiter extends Thread {
 	      }
 		waiterState = ret;
 	}
-	private boolean haveAllPortionsBeenServed() { //tblStub
+	
+	
+	/**
+	 * Operation have all portions been served
+	 *
+	 * It is called by a waiter to know if all the portions have been served
+	 * 
+	 * @return  true if have all portions been served - 
+	 * 		   false, otherwise 
+	 */
+	private boolean haveAllPortionsBeenServed() {
 		 boolean ret = false;   // return value
 
 	      try
@@ -332,8 +418,13 @@ public class Waiter extends Thread {
 	      return ret;
 	}
 	
-
-	private void handTheNoteToTheChef() { //kitStub
+	/**
+	 * Operation hand the note to the Chef.
+	 *
+	 * It is called by a waiter to deliver the order to the chef
+	 * 
+	 */
+	private void handTheNoteToTheChef() {
 		int ret = -1;
 		try
 	      { 
@@ -346,7 +437,13 @@ public class Waiter extends Thread {
 		waiterState = ret;
 	}
 	
-	private void collectPortion() { //kitStub
+	/**
+	 * Operation collect portion.
+	 *
+	 * It is called by a waiter to collect a portion
+	 *
+	 */
+	private void collectPortion() {
 		int ret = -1;
 		try
 	      { 

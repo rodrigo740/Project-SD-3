@@ -16,8 +16,8 @@ import serverSide.main.SimulPar;
 /**
  * Client side of the Restaurant (Student).
  *
- * Implementation of a client-server model of type 2 (server replication).
- * Communication is based on a communication channel under the TCP protocol.
+ *  Implementation of a client-server model of type 2 (server replication).
+ *  Communication is based on Java RMI.
  */
 public class ClientTheRestaurantWaiter {
 	/**
@@ -56,7 +56,7 @@ public class ClientTheRestaurantWaiter {
 		
 	      /* problem initialization */
 	      String nameEntryGeneralRepos = "GeneralRepository";            // public name of the general repository object
-	      GeneralReposInterface genReposStub = null;                        // remote reference to the general repository object
+	      GeneralReposInterface genReposStub = null;                     // remote reference to the general repository object
 	      String nameEntryBar = "Bar";                    				 // public name of the bar object
 	      String nameEntryKitchen = "Kitchen";                    		 // public name of the kitchen object
 	      String nameEntryTable = "Table";                    			 // public name of the table object

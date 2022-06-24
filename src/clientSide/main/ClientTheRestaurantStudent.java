@@ -15,21 +15,10 @@ import serverSide.main.SimulPar;
 /**
  * Client side of the Restaurant (Student).
  *
- * Implementation of a client-server model of type 2 (server replication).
- * Communication is based on a communication channel under the TCP protocol.
+ *  Implementation of a client-server model of type 2 (server replication).
+ *  Communication is based on Java RMI.
  */
 public class ClientTheRestaurantStudent {
-	/**
-	 * Main method.
-	 *
-	 * @param args runtime arguments 
-	 *		args[0] - name of the platform where is located the table server 
-	 *      args[1] - name of the platform where is located the bar server 
-	 *      args[2] - port number for listening to service requests 
-	 *      args[3] - port number for listening to service requests
-	 *      args[4] - name of the platform where is located the general repository server 
-	 *      args[5] - port number for listening to service requests
-	 */
 	
 	/**
 	 * Main method.
@@ -67,13 +56,13 @@ public class ClientTheRestaurantStudent {
 		
       /* problem initialization */
       String nameEntryGeneralRepos = "GeneralRepository";            // public name of the general repository object
-      GeneralReposInterface genReposStub = null;                        // remote reference to the general repository object
+      GeneralReposInterface genReposStub = null;                     // remote reference to the general repository object
       String nameEntryBar = "Bar";                    				 // public name of the bar object                  		 // public name of the kitchen object
       String nameEntryTable = "Table";                    			 // public name of the table object
       TableInterface tableStub = null; 								 // remote reference to the table
       BarInterface barStub = null;                          		 // remote reference to the bar object
       Registry registry = null;                                      // remote reference for registration in the RMI registry service
-      Student[] student = new Student[SimulPar.S]; // array of student threads
+      Student[] student = new Student[SimulPar.S]; 					 // array of student threads
 
 
       try

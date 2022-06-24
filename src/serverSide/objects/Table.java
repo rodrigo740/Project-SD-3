@@ -10,6 +10,7 @@ import commInfra.MemException;
 import commInfra.MemFIFO;
 import genclass.GenericIO;
 import interfaces.GeneralReposInterface;
+import interfaces.ReturnInt;
 import interfaces.TableInterface;
 import serverSide.main.ServerTable;
 import serverSide.main.SimulPar;
@@ -202,14 +203,12 @@ public class Table implements TableInterface{
 	 * Operation salute the client.
 	 *
 	 * It is called by a waiter to salute the client
+	 * @param waiterID waiter identifier
+	 * @return WaiterStates.PRSMN
 	 * @throws RemoteException 
 	 * 
 	 */
 	public synchronized int saluteTheClient(int waiterID) throws RemoteException {
-		// set state of waiter
-		//((Waiter) Thread.currentThread()).setWaiterState(WaiterStates.PRSMN);
-		// waiter id
-		//int waiterID = ((Waiter) Thread.currentThread()).getWaiterID();
 		try
 		{ 
 			reposStub.setWaiterState(waiterID, WaiterStates.PRSMN);
@@ -268,14 +267,12 @@ public class Table implements TableInterface{
 	 * Operation present the bill.
 	 *
 	 * It is called by a waiter to present the bill to the student
+	 * @param waiterID waiter identifier
+	 * @return WaiterStates.RECPM
 	 * @throws RemoteException 
 	 * 
 	 */
 	public synchronized int presentBill(int waiterID) throws RemoteException {
-		// set state of waiter
-		//((Waiter) Thread.currentThread()).setWaiterState(WaiterStates.RECPM);
-		// waiter id
-		//int waiterID = ((Waiter) Thread.currentThread()).getWaiterID();
 		try
 		{ 
 			reposStub.setWaiterState(waiterID, WaiterStates.RECPM);
@@ -316,15 +313,13 @@ public class Table implements TableInterface{
 	 * Operation get the pad
 	 *
 	 * It is called by a waiter to get the pad
+	 * @param waiterID waiter identifier
+	 * @return WaiterStates.TKODR
 	 * @throws RemoteException 
 	 * 
 	 */
 
 	public synchronized int getThePad(int waiterID) throws RemoteException {
-		// set state of waiter
-		//((Waiter) Thread.currentThread()).setWaiterState(WaiterStates.TKODR);
-		// waiter id
-		//int waiterID = ((Waiter) Thread.currentThread()).getWaiterID();
 		try
 		{ 
 			reposStub.setWaiterState(waiterID, WaiterStates.TKODR);
@@ -432,15 +427,14 @@ public class Table implements TableInterface{
 	 * Operation take a seat
 	 *
 	 * It is called by a student when it wants to take a seat at the table
+	 * @param studentID student identifier
+	 * @return StudentStates.TKSTT
 	 * @throws RemoteException 
 	 * 
 	 */
-	public synchronized int takeASeat(int studentID) throws RemoteException {
-		//int studentID;
-		// set state of student
-		//studentID = ((Student) Thread.currentThread()).getStudentID();
+	public synchronized ReturnInt takeASeat(int studentID) throws RemoteException {
+		ReturnInt ret = new ReturnInt (nStudents, StudentStates.TKSTT);
 		student[studentID] = Thread.currentThread();
-		//((Student) Thread.currentThread()).setStudentState(StudentStates.TKSTT);
 		try
 		{ 
 			reposStub.setStudentState(studentID, StudentStates.TKSTT);
@@ -460,9 +454,6 @@ public class Table implements TableInterface{
 		if (first == -1) {
 			first = studentID;
 		}
-		// setting the table seat of the student
-		// TODO
-		((Student) Thread.currentThread()).setSeat(nStudents);
 		try
 		{ 
 			reposStub.setStudentSeat(studentID, nStudents);
@@ -482,21 +473,22 @@ public class Table implements TableInterface{
 		}
 		// reset clientSaluted flag
 		setClientSaluted(false);
-		return StudentStates.TKSTT;
+		return ret;
 	}
 
 	/**
 	 * Operation selecting the course
 	 *
 	 * It is called by a student to know if all the portions have been served
+	 * @param studentID student identifier
+	 * @return StudentStates.SELCS
 	 * @throws RemoteException 
 	 * 
 	 */
-	public synchronized void selectingCourse() throws RemoteException {
-		int studentID;
+	public synchronized int selectingCourse(int studentID) throws RemoteException {
 		// set state of student
-		studentID = ((Student) Thread.currentThread()).getStudentID();
-		((Student) Thread.currentThread()).setStudentState(StudentStates.SELCS);
+		//studentID = ((Student) Thread.currentThread()).getStudentID();
+		//((Student) Thread.currentThread()).setStudentState(StudentStates.SELCS);
 		try
 		{ 
 			reposStub.setStudentState(studentID, StudentStates.SELCS);
@@ -509,6 +501,7 @@ public class Table implements TableInterface{
 		// set menuRead flag and waking up the waiter
 		menuRead = true;
 		notifyAll();
+		return StudentStates.SELCS;
 	}
 
 	/**
@@ -520,8 +513,7 @@ public class Table implements TableInterface{
 	 * @return true, if was the first to enter in the restaurant -
      *         false, otherwise
 	 */
-	public synchronized boolean firstToEnter() {
-		int studentID = ((Student) Thread.currentThread()).getStudentID();
+	public synchronized boolean firstToEnter(int studentID) {
 		return studentID == first;
 	}
 
@@ -542,15 +534,17 @@ public class Table implements TableInterface{
 	 * Operation organize order
 	 *
 	 * It is called by a student to start organizing the order
+	 * @param studentID student identifier
+	 * @return StudentStates.OGODR
 	 * @throws RemoteException 
 	 * 
 	 */
 
-	public synchronized void organizeOrder() throws RemoteException {
-		int studentID;
+	public synchronized int organizeOrder(int studentID) throws RemoteException {
+		
 		// set state of student
-		studentID = ((Student) Thread.currentThread()).getStudentID();
-		((Student) Thread.currentThread()).setStudentState(StudentStates.OGODR);
+		//studentID = ((Student) Thread.currentThread()).getStudentID();
+		//((Student) Thread.currentThread()).setStudentState(StudentStates.OGODR);
 		try
 		{ 
 			reposStub.setStudentState(studentID, StudentStates.OGODR);
@@ -572,6 +566,7 @@ public class Table implements TableInterface{
 			// reset informed flag
 			setInformed(false);
 		}
+		return StudentStates.OGODR;
 	}
 
 	/**
@@ -610,15 +605,16 @@ public class Table implements TableInterface{
 	 * Operation chat
 	 *
 	 * It is called by a student to start chatting with the companions
+	 * @param studentID student identifier
+	 * @return StudentStates.CHTWC
 	 * @throws RemoteException 
 	 * 
 	 */
 
-	public synchronized void chat() throws RemoteException {
-		int studentID;
+	public synchronized int chat(int studentID) throws RemoteException {
 		// set state of student
-		studentID = ((Student) Thread.currentThread()).getStudentID();
-		((Student) Thread.currentThread()).setStudentState(StudentStates.CHTWC);
+		//studentID = ((Student) Thread.currentThread()).getStudentID();
+		//((Student) Thread.currentThread()).setStudentState(StudentStates.CHTWC);
 		try
 		{ 
 			reposStub.setStudentState(studentID, StudentStates.CHTWC);
@@ -658,22 +654,25 @@ public class Table implements TableInterface{
 			setPortionDelivered(false);
 			notifyAll();
 		}
+		return StudentStates.CHTWC;
 	}
 
 	/**
 	 * Operation enjoy the meal
 	 *
 	 * It is called by a student to start eating the portion
+	 * @param studentID student identifier
+	 * @return StudentStates.EJYML
 	 * @throws RemoteException 
 	 * 
 	 */
 
-	public synchronized void enjoyMeal() throws RemoteException {
+	public synchronized int enjoyMeal(int studentID) throws RemoteException {
 		notifyAll();
-		int studentID;
+		//int studentID;
 		// set state of student
-		studentID = ((Student) Thread.currentThread()).getStudentID();
-		((Student) Thread.currentThread()).setStudentState(StudentStates.EJYML);
+		//studentID = ((Student) Thread.currentThread()).getStudentID();
+		//((Student) Thread.currentThread()).setStudentState(StudentStates.EJYML);
 		try
 		{ 
 			reposStub.setStudentState(studentID, StudentStates.EJYML);
@@ -687,22 +686,23 @@ public class Table implements TableInterface{
 			Thread.sleep((long) (1 + 40 * Math.random()));
 		} catch (InterruptedException e) {
 		}
+		return StudentStates.EJYML;
 	}
 
 	/**
 	 * Operation last to eat
 	 *
 	 * It is called by a student to know if it was the last to eat the portion
-	 * 
+	 * @param studentID student identifier
 	 * @return true, if was the last to eat the portion -
      *         false, otherwise
 	 * @throws RemoteException 
 	 */
 
-	public synchronized boolean lastToEat() throws RemoteException {
-		int studentID;
+	public synchronized boolean lastToEat(int studentID) throws RemoteException {
+		//int studentID;
 		// set state of student
-		studentID = ((Student) Thread.currentThread()).getStudentID();
+		//studentID = ((Student) Thread.currentThread()).getStudentID();
 		// increase number of portions eaten
 		eat++;
 		if (eat == SimulPar.S) {
@@ -746,14 +746,13 @@ public class Table implements TableInterface{
 	 *
 	 * It is called by a student to know if it was the last to enter in the
 	 * restaurant
-	 * 
+	 * @param studentID student identifier
 	 * @return true, if was the last to enter in the restaurant-
      *         false, otherwise
 	 */
 
-	public synchronized boolean lastToEnterRestaurant() {
+	public synchronized boolean lastToEnterRestaurant(int studentID) {
 		// set state of student
-		int studentID = ((Student) Thread.currentThread()).getStudentID();
 		return studentID == seatOrder.getLast();
 	}
 
@@ -761,15 +760,16 @@ public class Table implements TableInterface{
 	 * Operation honor the bill
 	 *
 	 * It is called by a student to honor the bill
+	 * @param studentID student identifier
+	 * @return StudentStates.PYTBL
 	 * @throws RemoteException 
 	 * 
 	 */
 
-	public synchronized void honorTheBill() throws RemoteException {
-		int studentID;
+	public synchronized int honorTheBill(int studentID) throws RemoteException {
 		// set state of student
-		studentID = ((Student) Thread.currentThread()).getStudentID();
-		((Student) Thread.currentThread()).setStudentState(StudentStates.PYTBL);
+		//studentID = ((Student) Thread.currentThread()).getStudentID();
+		//((Student) Thread.currentThread()).setStudentState(StudentStates.PYTBL);
 		try
 		{ 
 			reposStub.setStudentState(studentID, StudentStates.PYTBL);
@@ -791,20 +791,21 @@ public class Table implements TableInterface{
 		// set billHonored flag and wake up waiter
 		setBillHonored(true);
 		notifyAll();
+		return StudentStates.PYTBL;
 	}
 
 	/**
 	 * Operation go home
 	 *
 	 * It is called by a student to leave the restaurant and go home
+	 * @param studentID student identifier
+	 * @return StudentStates.GGHOM
 	 * @throws RemoteException 
 	 * 
 	 */
-	public synchronized void goHome() throws RemoteException {
-		int studentID;
+	public synchronized int goHome(int studentID) throws RemoteException {
+		
 		// set state of student
-		studentID = ((Student) Thread.currentThread()).getStudentID();
-		((Student) Thread.currentThread()).setStudentState(StudentStates.GGHOM);
 		try
 		{ 
 			reposStub.setStudentState(studentID, StudentStates.GGHOM);
@@ -814,6 +815,7 @@ public class Table implements TableInterface{
 			GenericIO.writelnString ("Student " + studentID + " remote exception on goHome - setStudentState: " + e.getMessage ());
 			System.exit (1);
 		}
+		return StudentStates.GGHOM;
 	}
 
 	/**
@@ -821,14 +823,15 @@ public class Table implements TableInterface{
 	 *
 	 * It is called by a student to wait of everyone to finish eating the current
 	 * course
+	 * @param studentID student identifier
+	 * @return StudentStates.CHTWC
 	 * @throws RemoteException 
 	 * 
 	 */
-	public synchronized void waitForEveryoneToFinish() throws RemoteException {
-		int studentID;
+	public synchronized int  waitForEveryoneToFinish(int studentID) throws RemoteException {
 		// set state of student
-		studentID = ((Student) Thread.currentThread()).getStudentID();
-		((Student) Thread.currentThread()).setStudentState(StudentStates.CHTWC);
+		//studentID = ((Student) Thread.currentThread()).getStudentID();
+		//((Student) Thread.currentThread()).setStudentState(StudentStates.CHTWC);
 		try
 		{ 
 			reposStub.setStudentState(studentID, StudentStates.CHTWC);
@@ -844,6 +847,7 @@ public class Table implements TableInterface{
 			} catch (Exception e) {
 			}
 		}
+		return StudentStates.CHTWC;
 	}
 
 	/**
