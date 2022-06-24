@@ -56,7 +56,7 @@ mkdir -p dirStudents/serverSide dirStudents/serverSide/main dirStudents/clientSi
 cp serverSide/main/SimulPar.class dirStudents/serverSide/main
 cp clientSide/main/ClientTheRestaurantStudent.class dirStudents/clientSide/main
 cp clientSide/entities/Student.class clientSide/entities/StudentStates.class dirStudents/clientSide/entities
-cp interfaces/TableInterface.class interfaces/BarInterface.class interfaces/GeneralReposInterface.class dirStudents/interfaces
+cp interfaces/TableInterface.class interfaces/BarInterface.class interfaces/GeneralReposInterface.class interfaces/ReturnInt.class dirStudents/interfaces
 echo "  Waiter"
 rm -rf dirWaiter/serverSide dirWaiter/clientSide dirWaiter/interfaces
 mkdir -p dirWaiter/serverSide dirWaiter/serverSide/main dirWaiter/clientSide dirWaiter/clientSide/main dirWaiter/clientSide/entities \
@@ -64,7 +64,7 @@ mkdir -p dirWaiter/serverSide dirWaiter/serverSide/main dirWaiter/clientSide dir
 cp serverSide/main/SimulPar.class dirWaiter/serverSide/main
 cp clientSide/main/ClientTheRestaurantWaiter.class dirWaiter/clientSide/main
 cp clientSide/entities/Waiter.class clientSide/entities/WaiterStates.class dirWaiter/clientSide/entities
-cp interfaces/TableInterface.class interfaces/BarInterface.class interfaces/KitchenInterface.class interfaces/GeneralReposInterface.class dirWaiter/interfaces
+cp interfaces/TableInterface.class interfaces/BarInterface.class interfaces/KitchenInterface.class interfaces/GeneralReposInterface.class interfaces/ReturnInt.class dirWaiter/interfaces
 echo "  Chef"
 rm -rf dirChef/serverSide dirChef/clientSide dirChef/interfaces
 mkdir -p dirChef dirChef/serverSide dirChef/serverSide/main dirChef/clientSide dirChef/clientSide/main dirChef/clientSide/entities \

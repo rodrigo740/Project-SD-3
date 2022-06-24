@@ -18,7 +18,7 @@ rmi_port=22309
 reg_port=22308
 
 chef_fname=sd201@l040101-ws05.ua.pt
-waiter_fname=sd201@l040101-ws09.ua.pt
+waiter_fname=sd201@l040101-ws04.ua.pt
 student_fname=sd201@l040101-ws03.ua.pt
 
 loggerFile=logger
