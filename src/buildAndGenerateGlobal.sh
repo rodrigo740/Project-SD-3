@@ -1,3 +1,5 @@
+rm -rf */*.class */*/*.class
+rm -rf *.zip
 echo "Compiling source code."
 javac -cp ".:./genclass.jar" */*.java */*/*.java
 echo "Distributing intermediate code to the different execution environments."

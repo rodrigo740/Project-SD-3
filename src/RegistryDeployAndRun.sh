@@ -1,7 +1,6 @@
 source config
 echo "Transfering data to the registry node."
 sshpass -f password ssh $rmi_fname 'mkdir -p test/TheRestaurant'
-sshpass -f password ssh $rmi_fname 'rm -rf test/TheRestaurant/*'
 sshpass -f password scp dirRegistry.zip $rmi_fname:test/TheRestaurant
 echo "Decompressing data sent to the registry node."
 sshpass -f password ssh $rmi_fname 'cd test/TheRestaurant ; unzip -uq dirRegistry.zip'
